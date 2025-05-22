@@ -1,4 +1,5 @@
 <?php
+include 'header.php';
 session_start();
 require_once __DIR__ . '/../config/config.php';
 
@@ -20,12 +21,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $_SESSION["role"] = $user["role"]; // Simpan role pengguna
 
         // Redirect sesuai role
-        if ($_SESSION["role"] == "anggota") {
-            header("Location: beranda_anggota.php");
-        } else {
-            header("Location: beranda.php");
-        }
-        exit();
+       if ($_SESSION["role"] === "anggota") {
+    header("Location: ../views/beranda_anggota.php");
+    exit();
+} elseif ($_SESSION["role"] === "pengurus") {
+    header("Location: ../views/beranda_pengurus.php"); // Pastikan halaman ini benar
+    exit();
+} else {
+    header("Location: ../views/beranda.php");
+    exit();
+}
     } else {
         echo "<p style='color: red;'>Username atau password salah!</p>";
     }
@@ -42,3 +47,4 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     
     <button type="submit">Login</button>
 </form>
+<?php include 'footer.php'; ?>

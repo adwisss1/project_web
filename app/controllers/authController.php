@@ -1,5 +1,9 @@
 <?php
 session_start();
+if (!isset($_SESSION["role"]) || $_SESSION["role"] !== "pengurus") {
+    header("Location: login.php"); // Jika bukan pengurus, arahkan ke login
+    exit();
+}
 require_once __DIR__ . '/../config/config.php';
 
 // Proses Login
@@ -24,7 +28,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["login"])) {
         if ($_SESSION["role"] === "anggota") {
             header("Location: ../views/beranda_anggota.php");
         } elseif ($_SESSION["role"] === "pengurus") {
-            header("Location: ../views/dashboard_pengurus.php");
+            header("Location: ../views/beranda_pengurus.php");
         } else {
             header("Location: ../views/beranda.php");
         }
