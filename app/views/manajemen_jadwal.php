@@ -36,8 +36,11 @@ while ($row = $jadwal_kondisional_result->fetch_assoc()) {
 
 <div class="content">
     <h2>Manajemen Jadwal Latihan</h2>
+<<<<<<< HEAD
     
     <a href="beranda_pengurus.php" >Kembali ke Beranda Pengurus</a>
+=======
+>>>>>>> f64731c8172ae9102b8959bef25d5cc14f919973
 
     <!-- Bagian 1: Tabel Jadwal Rutin -->
     <h3>Jadwal Latihan Rutin</h3>
