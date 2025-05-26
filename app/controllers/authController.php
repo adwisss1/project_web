@@ -1,21 +1,7 @@
 <?php
 session_start();
-<<<<<<< HEAD
-
-// Proses Logout
-if (isset($_GET["logout"])) {
-    session_unset();
-    session_destroy();
-    header("Location: ../views/beranda.php");
-    exit();
-}
-
-if (!isset($_SESSION["role"]) || $_SESSION["role"] !== "pengurus") {
-    header("Location: ../views/login.php"); // Jika bukan pengurus, arahkan ke login
-=======
 if (!isset($_SESSION["role"]) || $_SESSION["role"] !== "pengurus") {
     header("Location: login.php"); // Jika bukan pengurus, arahkan ke login
->>>>>>> f64731c8172ae9102b8959bef25d5cc14f919973
     exit();
 }
 require_once __DIR__ . '/../config/config.php';
@@ -33,30 +19,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["login"])) {
     $user = $result->fetch_assoc();
 
     if ($user) {
-<<<<<<< HEAD
-    // Simpan session dengan array user
-    $_SESSION["id"] = $user["id"]; // ID user
-    $_SESSION["user"] = [
-        "id" => $user["id"],
-        "username" => $user["username"],
-        "role" => $user["role"]
-    ];
-    $_SESSION["role"] = $user["role"]; // Role pengguna
-
-    // Redirect sesuai role
-    if ($_SESSION["role"] === "anggota") {
-        header("Location: ../views/beranda_anggota.php");
-    } elseif ($_SESSION["role"] === "pengurus") {
-        header("Location: ../views/beranda_pengurus.php");
-    } else {
-        header("Location: ../views/beranda.php");
-    }
-    exit();
-}
-}
-
-
-=======
         // Simpan session dengan ID
         $_SESSION["id"] = $user["id"]; // ID user
         $_SESSION["user"] = $user["username"]; // Username
@@ -83,5 +45,4 @@ if (isset($_GET["logout"])) {
     header("Location: ../views/beranda.php");
     exit();
 }
->>>>>>> f64731c8172ae9102b8959bef25d5cc14f919973
 ?>

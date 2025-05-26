@@ -1,8 +1,5 @@
 <?php
-<<<<<<< HEAD
 
-=======
->>>>>>> f64731c8172ae9102b8959bef25d5cc14f919973
 session_start();
 require_once __DIR__ . '/../config/config.php';
 
@@ -12,7 +9,6 @@ if (!isset($_SESSION["user"]) || $_SESSION["role"] !== "pengurus") {
     exit();
 }
 
-<<<<<<< HEAD
 // Ambil daftar angkatan unik
 $angkatan_result = $mysqli->query("SELECT DISTINCT angkatan FROM anggota ORDER BY angkatan DESC");
 
@@ -115,7 +111,7 @@ $evaluasi_result = $stmt2->get_result();
 
 <?php include __DIR__ . '/header.php'; ?>
 
-<a href="beranda_pengurus.php" >Kembali ke Beranda Pengurus</a>
+<a href="beranda_pengurus.php">Kembali ke Beranda Pengurus</a>
 <h2>Manajemen & Evaluasi Anggota</h2>
 
 <!-- Form Filter -->
@@ -161,43 +157,12 @@ $evaluasi_result = $stmt2->get_result();
         <th>Minat Bakat</th>
         <th>Aksi</th>
     </tr>
-=======
-// Ambil daftar anggota
-$stmt = $mysqli->prepare("
-    SELECT anggota.id, anggota.nama, anggota.nra, anggota.user_id, anggota.id_minat_bakat, 
-           minat_bakat.nama_minat_bakat 
-    FROM anggota 
-    LEFT JOIN minat_bakat ON anggota.id_minat_bakat = minat_bakat.id_minat_bakat");
-$stmt->execute();
-$anggota_result = $stmt->get_result();
-
-// Ambil daftar minat bakat
-$stmt = $mysqli->prepare("SELECT id_minat_bakat, nama_minat_bakat FROM minat_bakat");
-$stmt->execute();
-$minat_result = $stmt->get_result();
-
-// Ambil evaluasi keaktifan anggota
-$stmt = $mysqli->prepare("SELECT user_id, kehadiran, performa, umpan_balik FROM evaluasi");
-$stmt->execute();
-$evaluasi_result = $stmt->get_result();
-?>
-
-<?php include __DIR__ . '/header.php'; ?>
-<h2>Manajemen & Evaluasi Anggota</h2>
-
-<a href="tambah_anggota.php">Tambah Anggota Baru</a>
-<table border="1">
-    <tr><th>ID</th><th>Nama</th><th>NRA</th><th>Minat Bakat</th><th>Aksi</th></tr>
->>>>>>> f64731c8172ae9102b8959bef25d5cc14f919973
     <?php while ($anggota = $anggota_result->fetch_assoc()) { ?>
         <tr>
             <td><?= $anggota["id"]; ?></td>
             <td><?= htmlspecialchars($anggota["nama"]); ?></td>
             <td><?= htmlspecialchars($anggota["nra"]); ?></td>
-<<<<<<< HEAD
             <td><?= htmlspecialchars($anggota["angkatan"]); ?></td>
-=======
->>>>>>> f64731c8172ae9102b8959bef25d5cc14f919973
             <td><?= htmlspecialchars($anggota["nama_minat_bakat"] ?? "Belum Terdaftar"); ?></td>
             <td>
                 <a href="edit_anggota.php?id=<?= $anggota["id"]; ?>">Edit</a> |
@@ -207,7 +172,6 @@ $evaluasi_result = $stmt->get_result();
     <?php } ?>
 </table>
 
-<<<<<<< HEAD
 <!-- PAGINATION NAVIGATION -->
 <div style="margin:10px 0;">
     <?php if ($page > 1): ?>
@@ -219,8 +183,6 @@ $evaluasi_result = $stmt->get_result();
     <?php endif; ?>
 </div>
 
-=======
->>>>>>> f64731c8172ae9102b8959bef25d5cc14f919973
 <h2>Evaluasi Keaktifan Anggota</h2>
 <table border="1">
     <tr><th>User ID</th><th>Kehadiran</th><th>Performa</th><th>Umpan Balik</th></tr>
@@ -234,9 +196,4 @@ $evaluasi_result = $stmt->get_result();
     <?php } ?>
 </table>
 
-<<<<<<< HEAD
 <?php include __DIR__ . '/footer.php'; ?>
-=======
-<?php include __DIR__ . '/footer.php'; ?>
-
->>>>>>> f64731c8172ae9102b8959bef25d5cc14f919973
