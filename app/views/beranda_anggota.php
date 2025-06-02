@@ -3,18 +3,12 @@ session_start();
 require_once __DIR__ . '/../config/config.php';
 
 // Pastikan pengguna sudah login dan memiliki role anggota
-if (!isset($_SESSION["user"]) || $_SESSION["role"] !== "anggota") {
+if (!isset($_SESSION["user"]) || !is_array($_SESSION["user"]) || $_SESSION["user"]["role"] !== "anggota") {
     header("Location: login.php");
     exit();
 }
 
-// Pastikan session ID tersedia sebelum digunakan
-if (!isset($_SESSION["id"])) {
-    echo "Session ID tidak ditemukan!";
-    exit();
-}
-
-$user_id = $_SESSION["id"]; // Menggunakan ID dari session
+$user_id = $_SESSION["user"]["id"]; // Ambil ID dari session array
 
 // Ambil evaluasi anggota berdasarkan user_id
 $stmt = $mysqli->prepare("SELECT * FROM evaluasi WHERE user_id = ?");
@@ -33,7 +27,7 @@ $kegiatan_result = $stmt->get_result();
 <?php include 'header.php'; ?>
 
 <div class="content">
-    <h2>Selamat datang, <?= htmlspecialchars($_SESSION["user"]); ?>!</h2>
+    <h2>Selamat datang, <?= htmlspecialchars($_SESSION["user"]["username"]); ?>!</h2>
 
     <h3>Evaluasi Keaktifan</h3>
     <table border="1">
@@ -84,7 +78,7 @@ $kegiatan_result = $stmt->get_result();
     <a href="enroll_minat.php">Enroll Minat Bakat Baru</a> | <a href="absensi.php">Absensi Latihan</a>
 
     <br><br>
-    <a href="../controllers/authController.php?logout=true">Logout</a>
+    <a href="../controllers/authController.php?logout=1">Logout</a>
 </div>
 
 <?php include 'footer.php'; ?>

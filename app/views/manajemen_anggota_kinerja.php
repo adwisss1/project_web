@@ -65,11 +65,12 @@ $total_pages = max(1, ceil($total_rows / $per_page));
 
 // Query anggota dengan filter dan LIMIT
 $query = "
-    SELECT anggota.id, anggota.nama, anggota.nra, anggota.user_id, anggota.id_minat_bakat, anggota.angkatan,
+    SELECT DISTINCT anggota.id, anggota.nama, anggota.nra, anggota.user_id, anggota.id_minat_bakat, anggota.angkatan,
            minat_bakat.nama_minat_bakat 
     FROM anggota 
     LEFT JOIN minat_bakat ON anggota.id_minat_bakat = minat_bakat.id_minat_bakat
     WHERE 1
+    
 ";
 $params = [];
 $types = '';

@@ -1,9 +1,15 @@
 <?php
+
 session_start();
-if (!isset($_SESSION["role"]) || $_SESSION["role"] !== "pengurus") {
-    header("Location: login.php"); // Jika bukan pengurus, arahkan ke login
+
+// Proses Logout (letakkan di paling atas agar tidak terhalang logic lain)
+if (isset($_GET["logout"])) {
+    session_unset();
+    session_destroy();
+    header("Location: ../views/beranda.php");
     exit();
 }
+
 require_once __DIR__ . '/../config/config.php';
 
 // Proses Login
@@ -19,15 +25,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["login"])) {
     $user = $result->fetch_assoc();
 
     if ($user) {
-        // Simpan session dengan ID
-        $_SESSION["id"] = $user["id"]; // ID user
-        $_SESSION["user"] = $user["username"]; // Username
-        $_SESSION["role"] = $user["role"]; // Role pengguna
+        // Simpan session sebagai array (konsisten dengan login.php)
+        $_SESSION["user"] = [
+            "id" => $user["id"],
+            "username" => $user["username"],
+            "role" => $user["role"]
+        ];
+        $_SESSION["role"] = $user["role"];
 
         // Redirect sesuai role
-        if ($_SESSION["role"] === "anggota") {
+        if ($user["role"] === "anggota") {
             header("Location: ../views/beranda_anggota.php");
-        } elseif ($_SESSION["role"] === "pengurus") {
+        } elseif ($user["role"] === "pengurus") {
             header("Location: ../views/beranda_pengurus.php");
         } else {
             header("Location: ../views/beranda.php");
@@ -38,11 +47,5 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["login"])) {
     }
 }
 
-// Proses Logout
-if (isset($_GET["logout"])) {
-    session_unset();
-    session_destroy();
-    header("Location: ../views/beranda.php");
-    exit();
-}
+// Jika ingin membatasi akses ke halaman khusus pengurus, tambahkan cek role di file view-nya, bukan di controller ini.
 ?>

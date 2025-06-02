@@ -1,4 +1,5 @@
 <?php
+
 session_start();
 require_once __DIR__ . '/../config/config.php';
 
@@ -16,7 +17,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $enrollment_key = $_POST["enrollment_key"];
 
     // Validasi enrollment key
-    $validasi_query = $mysqli->prepare("SELECT * FROM minat_bakat WHERE nama = ? AND enrollment_key = ?");
+    $validasi_query = $mysqli->prepare("SELECT * FROM minat_bakat WHERE nama_minat_bakat = ? AND enrollment_key = ?");
     $validasi_query->bind_param("ss", $bidang_minat, $enrollment_key);
     $validasi_query->execute();
     $result = $validasi_query->get_result();
@@ -45,7 +46,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <label for="bidang_minat">Pilih Minat Bakat:</label>
         <select name="bidang_minat" id="bidang_minat" required>
             <?php while ($minat = $minat_query->fetch_assoc()) { ?>
-                <option value="<?= $minat["nama"]; ?>"><?= $minat["nama"]; ?></option>
+                <option value="<?= htmlspecialchars($minat["nama_minat_bakat"]); ?>"><?= htmlspecialchars($minat["nama_minat_bakat"]); ?></option>
             <?php } ?>
         </select>
 

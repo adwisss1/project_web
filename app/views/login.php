@@ -15,9 +15,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $user = $result->fetch_assoc();
 
     if ($user) {
-        // Simpan data ke session
-        $_SESSION["id"] = $user["id"]; // Tambahkan ID pengguna
-        $_SESSION["user"] = $user["username"]; // Hanya username
+        $_SESSION["user"] = [
+            "id" => $user["id"],
+            "username" => $user["username"],
+            "role" => $user["role"]
+        ];
         $_SESSION["role"] = $user["role"]; // Simpan role pengguna
 
         // Redirect sesuai role

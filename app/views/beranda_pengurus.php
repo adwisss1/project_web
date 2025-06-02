@@ -3,12 +3,12 @@ session_start();
 require_once __DIR__ . '/../config/config.php';
 
 // Pastikan pengguna sudah login dan memiliki role pengurus
-if (!isset($_SESSION["user"]) || $_SESSION["role"] !== "pengurus") {
+if (!isset($_SESSION["user"]) || !is_array($_SESSION["user"]) || $_SESSION["user"]["role"] !== "pengurus") {
     header("Location: login.php");
     exit();
 }
 
-$user_id = $_SESSION["id"]; // Menggunakan ID dari session
+$user_id = $_SESSION["user"]["id"]; // Ambil ID dari session array
 
 // Ambil daftar anggota dengan informasi minat bakat
 $stmt = $mysqli->prepare("
@@ -36,10 +36,10 @@ $stmt->execute();
 $materi_result = $stmt->get_result();
 ?>
 
-<?php include 'header.php'; ?> <!-- Tambahkan Header -->
+<?php include 'header.php'; ?>
 
 <div class="content">
-    <h2>Selamat datang, <?= htmlspecialchars($_SESSION["user"]); ?>!</h2>
+    <h2>Selamat datang, <?= htmlspecialchars($_SESSION["user"]["username"]); ?>!</h2>
 
     <h3>Menu Pengurus</h3>
     <ul>

@@ -67,6 +67,35 @@ while ($row = $jadwal_kondisional_result->fetch_assoc()) {
 
         <button type="submit">Simpan Jadwal</button>
     </form>
+    <!-- Tabel Jadwal Kondisional -->
+    <!-- Tabel Jadwal Kondisional -->
+    <h3>Daftar Jadwal Kondisional</h3>
+    <table border="1">
+        <tr>
+            <th>Bidang Minat</th>
+            <th>Tanggal</th>
+            <th>Jam</th>
+            <th>Aksi</th>
+        </tr>
+        <?php
+        // Ambil ulang data jadwal kondisional (karena $jadwal_kondisional_result sudah habis dipakai untuk kalender)
+        $stmt = $mysqli->prepare("SELECT id, bidang_minat, tanggal, jam FROM jadwal_latihan ORDER BY tanggal DESC, jam DESC");
+        $stmt->execute();
+        $jadwal_kondisional_table = $stmt->get_result();
+        while ($jadwal = $jadwal_kondisional_table->fetch_assoc()) { ?>
+            <tr>
+                <td><?= htmlspecialchars($jadwal["bidang_minat"]); ?></td>
+                <td><?= htmlspecialchars($jadwal["tanggal"]); ?></td>
+                <td><?= htmlspecialchars($jadwal["jam"]); ?></td>
+                <td>
+                    <form method="POST" action="controllers/hapus_jadwal.php" onsubmit="return confirm('Yakin ingin menghapus jadwal ini?');" style="display:inline;">
+                        <input type="hidden" name="id" value="<?= $jadwal["id"]; ?>">
+                        <button type="submit" style="color:red;">Hapus</button>
+                    </form>
+                </td>
+            </tr>
+        <?php } ?>
+    </table>
 
     <!-- Bagian 3: Kalender Jadwal -->
     <h3>Kalender Jadwal Latihan</h3>

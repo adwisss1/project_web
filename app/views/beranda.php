@@ -1,5 +1,16 @@
 <?php
-session_start(); // Pastikan hanya dipanggil sekali di awal
+session_start();
+
+// Jika sudah login, redirect ke dashboard sesuai role
+if (isset($_SESSION["user"]) && is_array($_SESSION["user"])) {
+    if ($_SESSION["user"]["role"] === "anggota") {
+        header("Location: beranda_anggota.php");
+        exit();
+    } elseif ($_SESSION["user"]["role"] === "pengurus") {
+        header("Location: beranda_pengurus.php");
+        exit();
+    }
+}
 ?>
 
 <?php include 'header.php'; ?>
@@ -24,11 +35,15 @@ body {
     // Menampilkan tombol Login jika user belum login
     if (!isset($_SESSION["user"])) {
         echo '<a href="/SI-BIRAMA/app/views/login.php">Login</a>';
-
     } else {
-        // Menampilkan ucapan selamat datang dan tombol Logout jika user sudah login
-        echo "<p>Selamat datang, " . $_SESSION["user"]["username"] . "!</p>";
-       echo '<a href="../controllers/authController.php?logout=true">Logout</a>';
+        // Cek tipe session user agar tidak error jika masih string
+        if (is_array($_SESSION["user"]) && isset($_SESSION["user"]["username"])) {
+            echo "<p>Selamat datang, " . htmlspecialchars($_SESSION["user"]["username"]) . "!</p>";
+        } else {
+            // Jika session lama masih string
+            echo "<p>Selamat datang, " . htmlspecialchars($_SESSION["user"]) . "!</p>";
+        }
+        echo '<a href="/SI-BIRAMA/app/controllers/authController.php?logout=true">Logout</a>';
     }
     ?>
 
