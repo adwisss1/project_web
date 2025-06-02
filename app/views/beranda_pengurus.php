@@ -10,6 +10,11 @@ if (!isset($_SESSION["user"]) || !is_array($_SESSION["user"]) || $_SESSION["user
 
 $user_id = $_SESSION["user"]["id"]; // Ambil ID dari session array
 
+// Ambil daftar pengurus dari tabel pengurus
+$stmt = $mysqli->prepare("SELECT id_pengurus, nama_pengurus, nim, angkatan, jabatan, kontak FROM pengurus");
+$stmt->execute();
+$pengurus_result = $stmt->get_result();
+
 // Ambil daftar anggota dengan informasi minat bakat
 $stmt = $mysqli->prepare("
     SELECT anggota.id, anggota.nama, anggota.nra, anggota.user_id, anggota.id_minat_bakat, 
@@ -41,6 +46,34 @@ $materi_result = $stmt->get_result();
 <div class="content">
     <h2>Selamat datang, <?= htmlspecialchars($_SESSION["user"]["username"]); ?>!</h2>
 
+    <h3>Daftar Pengurus</h3>
+    <table border="1">
+        <tr>
+            <th>No</th>
+            <th>Nama Pengurus</th>
+            <th>NIM</th>
+            <th>Angkatan</th>
+            <th>Jabatan</th>
+            <th>Kontak</th>
+            <th>Aksi</th>
+        </tr>
+        <?php
+        $no = 1;
+        while ($pengurus = $pengurus_result->fetch_assoc()) {
+            echo "<tr>";
+            echo "<td>{$no}</td>";
+            echo "<td>" . htmlspecialchars($pengurus["nama_pengurus"]) . "</td>";
+            echo "<td>" . htmlspecialchars($pengurus["nim"]) . "</td>";
+            echo "<td>" . htmlspecialchars($pengurus["angkatan"]) . "</td>";
+            echo "<td>" . htmlspecialchars($pengurus["jabatan"]) . "</td>";
+            echo "<td>" . htmlspecialchars($pengurus["kontak"]) . "</td>";
+            echo "<td><a href='edit_pengurus.php?id_pengurus=" . urlencode($pengurus["id_pengurus"]) . "'>Edit</a></td>";
+            echo "</tr>";
+            $no++;
+        }
+        ?>
+    </table>
+
     <h3>Menu Pengurus</h3>
     <ul>
         <li><a href="manajemen_anggota_kinerja.php">Manajemen & Evaluasi Anggota</a></li>
@@ -49,7 +82,7 @@ $materi_result = $stmt->get_result();
     </ul>
 
     <br><br>
-    <a href="../controllers/authController.php?logout=true">Logout</a>
+    <a href="/SI-BIRAMA/app/controllers/authController.php?logout=true">Logout</a>
 </div>
 
 <?php include 'footer.php'; ?>
