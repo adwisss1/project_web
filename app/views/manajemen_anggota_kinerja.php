@@ -104,7 +104,7 @@ $stmt->execute();
 $anggota_result = $stmt->get_result();
 
 // Ambil evaluasi keaktifan anggota (tabel lama, jika masih ingin ditampilkan)
-$stmt2 = $mysqli->prepare("SELECT user_id, kehadiran, performa, umpan_balik FROM evaluasi");
+$stmt2 = $mysqli->prepare("SELECT user_id, umpan_balik FROM evaluasi");
 $stmt2->execute();
 $evaluasi_result = $stmt2->get_result();
 
@@ -166,7 +166,7 @@ if ($filter_minat_evaluasi !== '') {
     <a href="manajemen_anggota_kinerja.php">Reset</a>
 </form>
 
-<a href="tambah_anggota.php">Tambah Anggota Baru</a>
+<a href="anggota_crud.php?mode=add">Tambah Anggota Baru</a>
 <table border="1">
     <tr>
         <th>ID</th>
@@ -184,8 +184,8 @@ if ($filter_minat_evaluasi !== '') {
             <td><?= htmlspecialchars($anggota["angkatan"]); ?></td>
             <td><?= htmlspecialchars($anggota["nama_minat_bakat"] ?? "Belum Terdaftar"); ?></td>
             <td>
-                <a href="edit_anggota.php?id=<?= $anggota["id"]; ?>">Edit</a> |
-                <a href="hapus_anggota.php?id=<?= $anggota["id"]; ?>">Hapus</a>
+            <a href="anggota_crud.php?mode=edit&id=<?= $anggota["id"]; ?>">Edit</a> |
+            <a href="anggota_crud.php?mode=delete&id=<?= $anggota["id"]; ?>" onclick="return confirm('Yakin ingin menghapus anggota ini?')">Hapus</a>
             </td>
         </tr>
     <?php } ?>
@@ -219,27 +219,45 @@ if ($filter_minat_evaluasi !== '') {
     </label>
     <button type="submit">Tampilkan</button>
 </form>
-
 <table border="1">
     <tr>
         <th>No</th>
         <th>Nama</th>
-        <th>NRA</th>
         <th>Angkatan</th>
         <th>Jumlah Absensi</th>
+        <th>Evaluasi</th>
         <th>Aksi</th>
     </tr>
     <?php
     if ($filter_minat_evaluasi !== '' && $anggota_evaluasi_result && $anggota_evaluasi_result->num_rows > 0) {
         $no = 1;
         while ($anggota = $anggota_evaluasi_result->fetch_assoc()) {
+            // Ambil evaluasi untuk anggota ini
+            $evaluasi_text = '';
+            $stmt_eval_detail = $mysqli->prepare("SELECT umpan_balik FROM evaluasi WHERE user_id = ?");
+            $stmt_eval_detail->bind_param("i", $anggota["id"]);
+            $stmt_eval_detail->execute();
+            $stmt_eval_detail->bind_result($evaluasi_text);
+            $stmt_eval_detail->fetch();
+            $stmt_eval_detail->close();
+
             echo "<tr>";
             echo "<td>{$no}</td>";
             echo "<td>" . htmlspecialchars($anggota["nama"]) . "</td>";
-            echo "<td>" . htmlspecialchars($anggota["nra"]) . "</td>";
             echo "<td>" . htmlspecialchars($anggota["angkatan"]) . "</td>";
             echo "<td>" . htmlspecialchars($anggota["jumlah_absen"]) . "</td>";
-            echo "<td><a href='evaluasi_anggota.php?id=" . $anggota["id"] . "'>Evaluasi</a></td>";
+            echo "<td>" . htmlspecialchars($evaluasi_text ?? '') . "</td>";
+            echo "<td>";
+            if (empty($evaluasi_text)) {
+                // Belum ada evaluasi
+                echo "<a href='evaluasi_anggota.php?mode=add&id=" . $anggota["id"] . "&minat_evaluasi=" . urlencode($filter_minat_evaluasi) . "'>Tambah Evaluasi</a>";
+                // echo "<a href='evaluasi_anggota.php?mode=add&id=" . $anggota["id"] . "'>Tambah Evaluasi</a>";
+            } else {
+                            // Sudah ada evaluasi
+            echo "<a href='evaluasi_anggota.php?mode=edit&id=" . $anggota["id"] . "&minat_evaluasi=" . urlencode($filter_minat_evaluasi) . "'>Edit</a> | ";
+            echo "<a href='evaluasi_anggota.php?mode=delete&id=" . $anggota["id"] . "&minat_evaluasi=" . urlencode($filter_minat_evaluasi) . "' onclick=\"return confirm('Hapus evaluasi ini?')\">Hapus</a>";
+            }
+            echo "</td>";
             echo "</tr>";
             $no++;
         }
