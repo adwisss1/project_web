@@ -70,7 +70,6 @@ $query = "
     FROM anggota 
     LEFT JOIN minat_bakat ON anggota.id_minat_bakat = minat_bakat.id_minat_bakat
     WHERE 1
-    
 ";
 $params = [];
 $types = '';
@@ -104,10 +103,29 @@ if (!empty($params)) {
 $stmt->execute();
 $anggota_result = $stmt->get_result();
 
-// Ambil evaluasi keaktifan anggota
+// Ambil evaluasi keaktifan anggota (tabel lama, jika masih ingin ditampilkan)
 $stmt2 = $mysqli->prepare("SELECT user_id, kehadiran, performa, umpan_balik FROM evaluasi");
 $stmt2->execute();
 $evaluasi_result = $stmt2->get_result();
+
+// --- Tambahan: Filter & Tabel Evaluasi Keaktifan per Minat Bakat ---
+$minat_result_eval = $mysqli->query("SELECT id_minat_bakat, nama_minat_bakat FROM minat_bakat");
+$filter_minat_evaluasi = isset($_GET['minat_evaluasi']) ? $_GET['minat_evaluasi'] : '';
+
+$anggota_evaluasi_result = null;
+if ($filter_minat_evaluasi !== '') {
+    $stmt_eval = $mysqli->prepare("
+        SELECT a.id, a.nama, a.nra, a.angkatan, mb.nama_minat_bakat,
+            (SELECT COUNT(*) FROM absensi WHERE absensi.user_id = a.user_id) AS jumlah_absen
+        FROM anggota a
+        LEFT JOIN minat_bakat mb ON a.id_minat_bakat = mb.id_minat_bakat
+        WHERE a.id_minat_bakat = ?
+        ORDER BY jumlah_absen ASC, a.nama ASC
+    ");
+    $stmt_eval->bind_param("i", $filter_minat_evaluasi);
+    $stmt_eval->execute();
+    $anggota_evaluasi_result = $stmt_eval->get_result();
+}
 ?>
 
 <?php include __DIR__ . '/header.php'; ?>
@@ -184,17 +202,53 @@ $evaluasi_result = $stmt2->get_result();
     <?php endif; ?>
 </div>
 
-<h2>Evaluasi Keaktifan Anggota</h2>
+<!-- Tambahan: Evaluasi Keaktifan Anggota per Minat Bakat -->
+<h2>Evaluasi Keaktifan Anggota per Minat Bakat</h2>
+<form method="get" style="margin-bottom:16px;">
+    <label>Pilih Minat Bakat:
+        <select name="minat_evaluasi" required>
+            <option value="">-- Pilih Minat Bakat --</option>
+            <?php
+            $minat_result_eval->data_seek(0);
+            while ($minat = $minat_result_eval->fetch_assoc()) { ?>
+                <option value="<?= $minat['id_minat_bakat'] ?>" <?= $filter_minat_evaluasi == $minat['id_minat_bakat'] ? 'selected' : '' ?>>
+                    <?= htmlspecialchars($minat['nama_minat_bakat']) ?>
+                </option>
+            <?php } ?>
+        </select>
+    </label>
+    <button type="submit">Tampilkan</button>
+</form>
+
 <table border="1">
-    <tr><th>User ID</th><th>Kehadiran</th><th>Performa</th><th>Umpan Balik</th></tr>
-    <?php while ($evaluasi = $evaluasi_result->fetch_assoc()) { ?>
-        <tr>
-            <td><?= $evaluasi["user_id"]; ?></td>
-            <td><?= htmlspecialchars($evaluasi["kehadiran"]); ?></td>
-            <td><?= htmlspecialchars($evaluasi["performa"]); ?></td>
-            <td><?= htmlspecialchars($evaluasi["umpan_balik"]); ?></td>
-        </tr>
-    <?php } ?>
+    <tr>
+        <th>No</th>
+        <th>Nama</th>
+        <th>NRA</th>
+        <th>Angkatan</th>
+        <th>Jumlah Absensi</th>
+        <th>Aksi</th>
+    </tr>
+    <?php
+    if ($filter_minat_evaluasi !== '' && $anggota_evaluasi_result && $anggota_evaluasi_result->num_rows > 0) {
+        $no = 1;
+        while ($anggota = $anggota_evaluasi_result->fetch_assoc()) {
+            echo "<tr>";
+            echo "<td>{$no}</td>";
+            echo "<td>" . htmlspecialchars($anggota["nama"]) . "</td>";
+            echo "<td>" . htmlspecialchars($anggota["nra"]) . "</td>";
+            echo "<td>" . htmlspecialchars($anggota["angkatan"]) . "</td>";
+            echo "<td>" . htmlspecialchars($anggota["jumlah_absen"]) . "</td>";
+            echo "<td><a href='evaluasi_anggota.php?id=" . $anggota["id"] . "'>Evaluasi</a></td>";
+            echo "</tr>";
+            $no++;
+        }
+    } elseif ($filter_minat_evaluasi !== '') {
+        echo "<tr><td colspan='6'>Tidak ada anggota pada minat bakat ini.</td></tr>";
+    } else {
+        echo "<tr><td colspan='6'>Silakan pilih minat bakat untuk evaluasi.</td></tr>";
+    }
+    ?>
 </table>
 
 <?php include __DIR__ . '/footer.php'; ?>
