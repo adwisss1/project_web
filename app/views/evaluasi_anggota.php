@@ -79,7 +79,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Setelah tambah/edit/hapus evaluasi berhasil:
     $minat_evaluasi = isset($_GET['minat_evaluasi']) ? $_GET['minat_evaluasi'] : '';
-    header("Location: manajemen_anggota_kinerja.php?minat_evaluasi=" . urlencode($minat_evaluasi) . "#tabel-evaluasi");
+    header("Location: evaluasi_keaktifan.php?minat_evaluasi=" . urlencode($minat_evaluasi) . "#tabel-evaluasi");    
+    // header("Location: manajemen_anggota_kinerja.php?minat_evaluasi=" . urlencode($minat_evaluasi) . "#tabel-evaluasi");
     exit();
 }
 
@@ -96,7 +97,7 @@ if ($mode === 'delete') {
     $stmt->close();
     // Setelah tambah/edit/hapus evaluasi berhasil:
     $minat_evaluasi = isset($_GET['minat_evaluasi']) ? $_GET['minat_evaluasi'] : '';
-    header("Location: manajemen_anggota_kinerja.php?minat_evaluasi=" . urlencode($minat_evaluasi) . "#tabel-evaluasi");
+    header("Location: evaluasi_keaktifan.php?minat_evaluasi=" . urlencode($minat_evaluasi) . "#tabel-evaluasi");    
     exit();
 }
 ?>

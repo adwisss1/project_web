@@ -20,7 +20,7 @@ $sesi_absensi_query = $mysqli->query("SELECT * FROM sesi_absensi WHERE status = 
 $sesi_absensi_aktif = $sesi_absensi_query->num_rows > 0;
 
 // Ambil jadwal latihan berdasarkan bidang minat anggota
-$jadwal_query = $mysqli->query("SELECT * FROM jadwal_latihan WHERE bidang_minat IN (SELECT bidang_minat FROM anggota WHERE user_id = $user_id)");
+// $jadwal_query = $mysqli->query("SELECT * FROM jadwal_ruitn WHERE bidang_minat IN (SELECT bidang_minat FROM anggota WHERE user_id = $user_id)");
 
 ?>
 
@@ -51,22 +51,6 @@ $jadwal_query = $mysqli->query("SELECT * FROM jadwal_latihan WHERE bidang_minat 
                         <span style="color: red;">Sesi absensi belum dibuka</span>
                     <?php } ?>
                 </td>
-            </tr>
-        <?php } ?>
-    </table>
-
-    <h3>Jadwal Latihan</h3>
-    <table border="1">
-        <tr>
-            <th>Bidang Minat Bakat</th>
-            <th>Hari</th>
-            <th>Jam</th>
-        </tr>
-        <?php while ($jadwal = $jadwal_query->fetch_assoc()) { ?>
-            <tr>
-                <td><?= $jadwal["bidang_minat"]; ?></td>
-                <td><?= $jadwal["hari"]; ?></td>
-                <td><?= $jadwal["jam"]; ?></td>
             </tr>
         <?php } ?>
     </table>

@@ -30,7 +30,7 @@ $stmt->execute();
 $minat_result = $stmt->get_result();
 
 // Ambil evaluasi keaktifan anggota
-$stmt = $mysqli->prepare("SELECT user_id, kehadiran, performa, umpan_balik FROM evaluasi WHERE user_id = ?");
+$stmt = $mysqli->prepare("SELECT user_id, umpan_balik FROM evaluasi WHERE user_id = ?");
 $stmt->bind_param("i", $user_id);
 $stmt->execute();
 $evaluasi_result = $stmt->get_result();
