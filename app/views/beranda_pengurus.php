@@ -25,7 +25,7 @@ $stmt->execute();
 $anggota_result = $stmt->get_result();
 
 // Ambil daftar minat bakat
-$stmt = $mysqli->prepare("SELECT id_minat_bakat, nama_minat_bakat, enrollment_key FROM minat_bakat");
+$stmt = $mysqli->prepare("SELECT id_minat_bakat, nama_minat_bakat, enrollment_key,id_bidang FROM minat_bakat");
 $stmt->execute();
 $minat_result = $stmt->get_result();
 
@@ -74,6 +74,41 @@ $materi_result = $stmt->get_result();
         ?>
     </table>
 
+
+    <h3>Daftar Minat Bakat</h3>
+    <table border="1">
+        <tr>
+            <th>No</th>
+            <th>Nama Minat Bakat</th>
+            <th>Enrollment Key</th>
+            <th>Bidang</th>
+        </tr>
+        <?php
+        $no = 1;
+        // Ambil nama bidang dari tabel bidang jika ada relasi
+        while ($minat = $minat_result->fetch_assoc()) {
+            // Ambil nama bidang jika ada kolom id_bidang
+            $nama_bidang = "-";
+            if (isset($minat['id_bidang']) && $minat['id_bidang']) {
+                $stmt_bidang = $mysqli->prepare("SELECT nama_bidang FROM bidang WHERE id_bidang = ?");
+                $stmt_bidang->bind_param("i", $minat['id_bidang']);
+                $stmt_bidang->execute();
+                $stmt_bidang->bind_result($nama_bidang_db);
+                if ($stmt_bidang->fetch()) {
+                    $nama_bidang = $nama_bidang_db;
+                }
+                $stmt_bidang->close();
+            }
+            echo "<tr>";
+            echo "<td>{$no}</td>";
+            echo "<td>" . htmlspecialchars($minat["nama_minat_bakat"]) . "</td>";
+            echo "<td>" . htmlspecialchars($minat["enrollment_key"]) . "</td>";
+            echo "<td>" . htmlspecialchars($nama_bidang) . "</td>";
+            echo "</tr>";
+            $no++;
+        }
+        ?>
+    </table>
     <h3>Menu Pengurus</h3>
     <ul>
         <li><a href="manajemen_anggota_kinerja.php">Manajemen & Evaluasi Anggota</a></li>

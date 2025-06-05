@@ -18,7 +18,11 @@ $stmt->execute();
 $jadwal_rutin_result = $stmt->get_result();
 
 // Ambil jadwal kondisional (event, job, latihan tambahan)
-$stmt = $mysqli->prepare("SELECT id, bidang_minat, tanggal, jam FROM jadwal_latihan");
+$stmt = $mysqli->prepare("
+    SELECT jk.id, mb.nama_minat_bakat, jk.tanggal, jk.jam, jk.keterangan
+    FROM jadwal_kondisional jk
+    INNER JOIN minat_bakat mb ON jk.id_minat_bakat = mb.id_minat_bakat
+");
 $stmt->execute();
 $jadwal_kondisional_result = $stmt->get_result();
 
@@ -26,7 +30,7 @@ $jadwal_kondisional_result = $stmt->get_result();
 $events = [];
 while ($row = $jadwal_kondisional_result->fetch_assoc()) {
     $events[] = [
-        "title" => $row["bidang_minat"],
+        "title" => $row["nama_minat_bakat"] . (empty($row["keterangan"]) ? "" : " - " . $row["keterangan"]),
         "start" => $row["tanggal"] . "T" . $row["jam"]
     ];
 }
@@ -42,11 +46,20 @@ while ($row = $jadwal_kondisional_result->fetch_assoc()) {
     <h3>Jadwal Latihan Rutin</h3>
     <a href="edit_jadwal_rutin.php">Edit Jadwal Rutin</a>
     <table border="1">
-        <tr><th>Minat Bakat</th><th>Durasi Latihan</th><th>Mentor</th></tr>
-        <?php while ($jadwal = $jadwal_rutin_result->fetch_assoc()) { ?>
+        <tr><th>Minat Bakat</th><th>Durasi Latihan (menit)</th><th>Mentor</th></tr>
+        <?php
+        // Ambil ulang data jadwal_rutin untuk tabel
+        $stmt = $mysqli->prepare("
+            SELECT jr.id, mb.nama_minat_bakat, jr.durasi_latihan, jr.mentor 
+            FROM jadwal_rutin jr
+            INNER JOIN minat_bakat mb ON jr.id_minat_bakat = mb.id_minat_bakat
+        ");
+        $stmt->execute();
+        $jadwal_rutin_table = $stmt->get_result();
+        while ($jadwal = $jadwal_rutin_table->fetch_assoc()) { ?>
             <tr>
                 <td><?= htmlspecialchars($jadwal["nama_minat_bakat"]); ?></td>
-                <td><?= htmlspecialchars($jadwal["durasi_latihan"]); ?> Jam</td>
+                <td><?= htmlspecialchars($jadwal["durasi_latihan"]); ?></td>
                 <td><?= htmlspecialchars($jadwal["mentor"]); ?></td>
             </tr>
         <?php } ?>
@@ -54,10 +67,16 @@ while ($row = $jadwal_kondisional_result->fetch_assoc()) {
 
     <!-- Bagian 2: Form Tambah Jadwal Kondisional -->
     <h3>Tambah Jadwal Kondisional</h3>
-        <form method="POST" action="controllers/tambah_jadwal.php">
-
-        <label for="bidang_minat">Bidang Minat:</label>
-        <input type="text" name="bidang_minat" required><br>
+    <form method="POST" action="controllers/tambah_jadwal.php">
+        <label for="id_minat_bakat">Minat Bakat:</label>
+        <select name="id_minat_bakat" required>
+            <?php
+            $minat_result = $mysqli->query("SELECT id_minat_bakat, nama_minat_bakat FROM minat_bakat");
+            while ($mb = $minat_result->fetch_assoc()) {
+                echo '<option value="'.$mb['id_minat_bakat'].'">'.htmlspecialchars($mb['nama_minat_bakat']).'</option>';
+            }
+            ?>
+        </select><br>
 
         <label for="tanggal">Tanggal Latihan:</label>
         <input type="date" name="tanggal" required><br>
@@ -65,28 +84,38 @@ while ($row = $jadwal_kondisional_result->fetch_assoc()) {
         <label for="jam">Jam Latihan:</label>
         <input type="time" name="jam" required><br>
 
+        <label for="keterangan">Keterangan:</label>
+        <input type="text" name="keterangan"><br>
+
         <button type="submit">Simpan Jadwal</button>
     </form>
-    <!-- Tabel Jadwal Kondisional -->
+
     <!-- Tabel Jadwal Kondisional -->
     <h3>Daftar Jadwal Kondisional</h3>
     <table border="1">
         <tr>
-            <th>Bidang Minat</th>
+            <th>Minat Bakat</th>
             <th>Tanggal</th>
             <th>Jam</th>
+            <th>Keterangan</th>
             <th>Aksi</th>
         </tr>
         <?php
-        // Ambil ulang data jadwal kondisional (karena $jadwal_kondisional_result sudah habis dipakai untuk kalender)
-        $stmt = $mysqli->prepare("SELECT id, bidang_minat, tanggal, jam FROM jadwal_latihan ORDER BY tanggal DESC, jam DESC");
+        // Ambil ulang data jadwal kondisional untuk tabel
+        $stmt = $mysqli->prepare("
+            SELECT jk.id, mb.nama_minat_bakat, jk.tanggal, jk.jam, jk.keterangan
+            FROM jadwal_kondisional jk
+            INNER JOIN minat_bakat mb ON jk.id_minat_bakat = mb.id_minat_bakat
+            ORDER BY jk.tanggal DESC, jk.jam DESC
+        ");
         $stmt->execute();
         $jadwal_kondisional_table = $stmt->get_result();
         while ($jadwal = $jadwal_kondisional_table->fetch_assoc()) { ?>
             <tr>
-                <td><?= htmlspecialchars($jadwal["bidang_minat"]); ?></td>
+                <td><?= htmlspecialchars($jadwal["nama_minat_bakat"]); ?></td>
                 <td><?= htmlspecialchars($jadwal["tanggal"]); ?></td>
                 <td><?= htmlspecialchars($jadwal["jam"]); ?></td>
+                <td><?= htmlspecialchars($jadwal["keterangan"]); ?></td>
                 <td>
                     <form method="POST" action="controllers/hapus_jadwal.php" onsubmit="return confirm('Yakin ingin menghapus jadwal ini?');" style="display:inline;">
                         <input type="hidden" name="id" value="<?= $jadwal["id"]; ?>">
@@ -104,7 +133,6 @@ while ($row = $jadwal_kondisional_result->fetch_assoc()) {
 
     <div id="calendar"></div>
 
-    
     <script>
     document.addEventListener('DOMContentLoaded', function() {
         var calendarEl = document.getElementById('calendar');
@@ -116,6 +144,5 @@ while ($row = $jadwal_kondisional_result->fetch_assoc()) {
     });
     </script>
 </div>
-
 
 <?php include __DIR__ . '/footer.php'; ?>
