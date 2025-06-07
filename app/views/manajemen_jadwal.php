@@ -40,29 +40,31 @@ while ($row = $jadwal_kondisional_result->fetch_assoc()) {
 <a href="beranda_pengurus.php">Kembali ke Beranda Pengurus</a>
 
 <div class="content">
-    <h2>Manajemen Jadwal Latihan</h2>
-
-    <!-- Bagian 1: Tabel Jadwal Rutin -->
-    <h3>Jadwal Latihan Rutin</h3>
-    <a href="edit_jadwal_rutin.php">Edit Jadwal Rutin</a>
+    <h3>Daftar Jadwal Rutin</h3>
     <table border="1">
-        <tr><th>Minat Bakat</th><th>Durasi Latihan (menit)</th><th>Mentor</th></tr>
+        <tr>
+            <th>No</th>
+            <th>Hari</th>
+            <th>Jam</th>
+            <th>Durasi Latihan</th>
+            <th>Mentor</th>
+            <th>Aksi</th>
+        </tr>
         <?php
-        // Ambil ulang data jadwal_rutin untuk tabel
-        $stmt = $mysqli->prepare("
-            SELECT jr.id, mb.nama_minat_bakat, jr.durasi_latihan, jr.mentor 
-            FROM jadwal_rutin jr
-            INNER JOIN minat_bakat mb ON jr.id_minat_bakat = mb.id_minat_bakat
-        ");
-        $stmt->execute();
-        $jadwal_rutin_table = $stmt->get_result();
-        while ($jadwal = $jadwal_rutin_table->fetch_assoc()) { ?>
-            <tr>
-                <td><?= htmlspecialchars($jadwal["nama_minat_bakat"]); ?></td>
-                <td><?= htmlspecialchars($jadwal["durasi_latihan"]); ?></td>
-                <td><?= htmlspecialchars($jadwal["mentor"]); ?></td>
-            </tr>
-        <?php } ?>
+        $jadwal_query = $mysqli->query("SELECT * FROM jadwal_rutin");
+        $no = 1;
+        while ($jadwal = $jadwal_query->fetch_assoc()) {
+            echo "<tr>";
+            echo "<td>{$no}</td>";
+            echo "<td>" . (isset($jadwal["hari"]) ? htmlspecialchars($jadwal["hari"]) : '-') . "</td>";
+            echo "<td>" . (isset($jadwal["jam"]) ? htmlspecialchars($jadwal["jam"]) : '-') . "</td>";
+            echo "<td>" . htmlspecialchars($jadwal["durasi_latihan"]) . "</td>";
+            echo "<td>" . htmlspecialchars($jadwal["mentor"]) . "</td>";
+            echo "<td><a href='edit_jadwal_rutin.php?id=" . urlencode($jadwal["id"]) . "'>Edit</a></td>";
+            echo "</tr>";
+            $no++;
+        }
+        ?>
     </table>
 
     <!-- Bagian 2: Form Tambah Jadwal Kondisional -->
