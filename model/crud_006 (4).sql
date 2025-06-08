@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Waktu pembuatan: 03 Jun 2025 pada 10.49
+-- Waktu pembuatan: 08 Jun 2025 pada 09.19
 -- Versi server: 10.4.32-MariaDB
 -- Versi PHP: 8.2.12
 
@@ -46,110 +46,323 @@ CREATE TABLE `anggota` (
   `nama` varchar(100) NOT NULL,
   `nra` varchar(20) NOT NULL,
   `angkatan` int(4) NOT NULL,
-  `user_id` int(11) NOT NULL,
-  `id_minat_bakat` int(11) NOT NULL
+  `user_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data untuk tabel `anggota`
 --
 
-INSERT INTO `anggota` (`id`, `nama`, `nra`, `angkatan`, `user_id`, `id_minat_bakat`) VALUES
-(628, 'Chalya Putri Budiani', 'E1D02310182', 2022, 3, 1),
-(629, 'Astrida Berlina Wibowo', 'F1E02310074', 2023, 4, 2),
-(630, 'Viona Zulfa Salsabilla', 'C1M02310021', 2024, 5, 3),
-(631, 'Farrel Putra Wiana', 'C1N02310027', 2022, 6, 4),
-(632, 'Hafana Zahra Berlianty', 'F1E02310078', 2023, 7, 1),
-(633, 'Siti Hajar Ibrahim', 'E1D02310149', 2024, 8, 2),
-(634, 'Praja Alim Zamzani', 'L1A02310134', 2022, 9, 3),
-(635, 'Husniah Azriani', 'A1B022132', 2023, 10, 4),
-(636, 'Sahida Najwa', 'J1A02310138', 2024, 11, 1),
-(637, 'Nida Khairunisa', 'E1D02310220', 2022, 12, 2),
-(638, 'Adelia Anggellina Purnama', 'C1G02310165', 2023, 13, 3),
-(639, 'Nadya Permata Murti Puspitaningrum', 'J1A02310072', 2024, 14, 4),
-(640, 'Athirah Salsabila', 'C1M02310102', 2022, 15, 1),
-(641, 'Audira Haerunnisa', 'C1L02310030', 2023, 16, 2),
-(642, 'Hana Athaya Nurhalizah', 'H1A02310165', 2024, 17, 3),
-(643, 'Putri Dwi Febbia', 'E1E022042', 2022, 18, 4),
-(644, 'Ahmad Aldi', 'D1A02310495', 2023, 19, 1),
-(645, 'Zidan Ihlasul Amal', 'E1B022256', 2024, 20, 2),
-(646, 'Siti Zulya Fatmi', 'D1A022076', 2022, 21, 3),
-(647, 'Nurul Aulia', 'D1A022067', 2023, 22, 4),
-(648, 'Arya Qisthi Suryanto', 'D1A02310340', 2024, 23, 1),
-(649, 'Laili Julianingsih', 'D1A022041', 2022, 24, 2),
-(650, 'Dian Rizki Damayani', 'D1A022019', 2023, 25, 3),
-(651, 'Zahwa Azzahra', 'A1B02310240', 2024, 26, 4),
-(652, 'Annisa Arsylita', 'C1N02310092', 2022, 27, 1),
-(654, 'Muhammad Ridho Azkari', 'F1A021195', 2024, 29, 3),
-(655, 'Iga Nabila Ouwan Azzahra', 'C1G022020', 2022, 30, 4),
-(656, 'Rifal Gibran', 'A1B02310188', 2023, 31, 1),
-(657, 'Alivia Zaliyanti', 'C1M02310001', 2024, 32, 2),
-(658, 'Imelda Hartawan', 'F1E02310081', 2022, 33, 3),
-(659, 'Putri Siti Rabiah', 'D1A022552', 2023, 34, 4),
-(660, 'Annisa Rahma Kusuma', 'B1D022063', 2024, 35, 1),
-(661, 'Eva Yolanda', 'D1A022396', 2022, 36, 2),
-(662, 'Baiq Nazira Oktaviani', 'A1B02310091', 2023, 37, 3),
-(663, 'Yasanti Etenia', 'A1C022294', 2024, 38, 4),
-(664, 'Nyayu Dian Fermanu', 'E1B022169', 2022, 39, 1),
-(665, 'Maulida Apriana', 'E1B022158', 2023, 40, 2),
-(666, 'Dara Anggun Adhna Fika', 'E1S022032', 2024, 41, 3),
-(667, 'Deya Kalisdia', 'E1S022005', 2022, 42, 4),
-(668, 'Riza Aprilia', 'E1S022015', 2023, 43, 1),
-(669, 'Baiq Hanisa Yasmin', 'E1S022028', 2024, 44, 2),
-(670, 'Shahinaz Syahira', 'E1S022017', 2022, 45, 3),
-(671, 'Ricko Muksalminan Jerowarunikus', 'A0E02310111', 2023, 46, 4),
-(672, 'Baiq Inggid Putri Zahwa', 'L1A02310107', 2024, 47, 1),
-(673, 'Rahadian Hidayatullah', 'F1A02310114', 2022, 48, 2),
-(674, 'Nindya Faninda Putri', 'A1C02310173', 2023, 49, 3),
-(675, 'Aulianov Ramadhani', 'L1A02310103', 2024, 50, 4),
-(677, 'Rosyidah Nur Hairani', 'E1D022036', 2023, 52, 2),
-(679, 'Risa Handayani', 'L1C02310087', 2022, 54, 4),
-(680, 'Bunga Gea Varesa', 'J1A02310007', 2023, 55, 1),
-(681, 'Arjun Hidayatullah', 'L1B02310071', 2024, 56, 2),
-(682, 'Lalu Muhammad Fachrian Surya Lingga', 'F1C02310068', 2022, 57, 3),
-(683, 'Nur Shopya Afifaturrahmah', 'G1A022008', 2023, 58, 4),
-(684, 'Susan Tiara Nelpiana', 'D1A022295', 2024, 59, 1),
-(685, 'Baiq Moza Fatima Dwi Kamalia', 'L1A02310007', 2022, 60, 2),
-(686, 'Sandrina Kartikasari Pujiono', 'A1B02310193', 2023, 61, 3),
-(687, 'Siti Fatimatuzzakhro', 'E1B02310124', 2024, 62, 4),
-(688, 'Heppy Tasya Pibiputri', 'G1E022027', 2022, 63, 1),
-(689, 'Lalu Sadad Fathoni', 'G1E02310024', 2023, 64, 2),
-(690, 'Mayzania Safitri', 'J1A02310017', 2024, 65, 3),
-(691, 'Tri Jannatun Mardiah', 'J1A02310028', 2022, 66, 4),
-(692, 'Rahayu Wahida Putri Maulana', 'C1M02310075', 2023, 67, 1),
-(693, 'Reinanda Taufara Akbar', 'L1A02310136', 2024, 68, 2),
-(694, 'Rendi Setiawan', 'A0E02310074', 2022, 69, 3),
-(695, 'Mario Benediktus Rawa Gana', 'E1D02310107', 2023, 70, 4),
-(696, 'Keishe Tita Violeta', 'E1C02310084', 2024, 71, 1),
-(697, 'Baiq Fitriana Dila', 'J1A02310005', 2022, 72, 2),
-(698, 'Diaz Risky Atallah', 'L1B022041', 2023, 73, 3),
-(699, 'Ananda Farzana Azzyaty', 'E1D022005', 2024, 74, 4),
-(700, 'Annisa Febrina Hidayat', 'E1D022008', 2022, 75, 1),
-(701, 'Maya Delfira Putri', 'J1A02310016', 2023, 76, 2),
-(702, 'Fatimah Az Zahra', 'F1C022112', 2024, 77, 3),
-(703, 'Baiq Dafina Salsabila', 'A1C02310053', 2022, 78, 4),
-(704, 'Zyasa Dwinta Khaliesta', 'E1B022186', 2023, 79, 1),
-(705, 'Ahmad Reza Mahendra', 'E1A022094', 2024, 80, 2),
-(706, 'Nyoman Aldi Pradipta', 'A1B02310179', 2022, 81, 3),
-(707, 'Adelia Anatia Safitri', 'D1A02310089', 2023, 82, 4),
-(708, 'Ni Nyoman Ayu Mega Lestari', 'C1G022125', 2024, 83, 1),
-(709, 'Wilda Aprilianda', 'E1S02310092', 2022, 84, 2),
-(710, 'Siti Raehanun', 'L1C022087', 2023, 85, 3),
-(711, 'Nilam Saqinah Maharani', 'C1B022016', 2024, 86, 4),
-(712, 'Meili Angelina Rahma', 'C1K02310041', 2022, 87, 1),
-(713, 'Felicia Melinda Coulina Putri', 'J1A02310009', 2023, 88, 2),
-(714, 'Komang Dewi Triendra Hari', 'J1A02310014', 2024, 89, 3),
-(715, 'Maria Anastasia Maya Mau', 'J1A02310015', 2022, 90, 4),
-(716, 'Yayu Dwi Wahyuni', 'A1A021269', 2023, 91, 1),
-(717, 'Radika Dewi A', 'A1A021242', 2024, 92, 2),
-(718, 'Witri Widyastuti', 'A1A021255', 2022, 93, 3),
-(719, 'Marselena Primasati Utari', 'F1A02310090', 2023, 94, 4),
-(720, 'Ni Kadek Gita Sri Persada', 'A1B022184', 2024, 95, 1),
-(721, 'Nela Febiola', 'A1B022183', 2022, 96, 2),
-(722, 'Ni Nengah Dira Windriani', 'A1B022187', 2023, 97, 3),
-(723, 'Asty Murniati', 'E1E022225', 2024, 98, 4),
-(724, 'M Algifari', 'E1C022078', 2022, 99, 1),
-(725, 'Eki Wahardani', 'A0E02310041', 2023, 100, 2);
+INSERT INTO `anggota` (`id`, `nama`, `nra`, `angkatan`, `user_id`) VALUES
+(628, 'Chalya Putri Budiani', 'E1D02310182', 2022, 3),
+(629, 'Astrida Berlina Wibowo', 'F1E02310074', 2023, 4),
+(630, 'Viona Zulfa Salsabilla', 'C1M02310021', 2024, 5),
+(631, 'Farrel Putra Wiana', 'C1N02310027', 2022, 6),
+(632, 'Hafana Zahra Berlianty', 'F1E02310078', 2023, 7),
+(633, 'Siti Hajar Ibrahim', 'E1D02310149', 2024, 8),
+(634, 'Praja Alim Zamzani', 'L1A02310134', 2022, 9),
+(635, 'Husniah Azriani', 'A1B022132', 2023, 10),
+(636, 'Sahida Najwa', 'J1A02310138', 2024, 11),
+(637, 'Nida Khairunisa', 'E1D02310220', 2022, 12),
+(638, 'Adelia Anggellina Purnama', 'C1G02310165', 2023, 13),
+(639, 'Nadya Permata Murti Puspitaningrum', 'J1A02310072', 2024, 14),
+(640, 'Athirah Salsabila', 'C1M02310102', 2022, 15),
+(641, 'Audira Haerunnisa', 'C1L02310030', 2023, 16),
+(642, 'Hana Athaya Nurhalizah', 'H1A02310165', 2024, 17),
+(643, 'Putri Dwi Febbia', 'E1E022042', 2022, 18),
+(644, 'Ahmad Aldi', 'D1A02310495', 2023, 19),
+(645, 'Zidan Ihlasul Amal', 'E1B022256', 2024, 20),
+(646, 'Siti Zulya Fatmi', 'D1A022076', 2022, 21),
+(647, 'Nurul Aulia', 'D1A022067', 2023, 22),
+(648, 'Arya Qisthi Suryanto', 'D1A02310340', 2024, 23),
+(649, 'Laili Julianingsih', 'D1A022041', 2022, 24),
+(650, 'Dian Rizki Damayani', 'D1A022019', 2023, 25),
+(651, 'Zahwa Azzahra', 'A1B02310240', 2024, 26),
+(652, 'Annisa Arsylita', 'C1N02310092', 2022, 27),
+(654, 'Muhammad Ridho Azkari', 'F1A021195', 2024, 29),
+(655, 'Iga Nabila Ouwan Azzahra', 'C1G022020', 2022, 30),
+(656, 'Rifal Gibran', 'A1B02310188', 2023, 31),
+(657, 'Alivia Zaliyanti', 'C1M02310001', 2024, 32),
+(658, 'Imelda Hartawan', 'F1E02310081', 2022, 33),
+(659, 'Putri Siti Rabiah', 'D1A022552', 2023, 34),
+(660, 'Annisa Rahma Kusuma', 'B1D022063', 2024, 35),
+(661, 'Eva Yolanda', 'D1A022396', 2022, 36),
+(662, 'Baiq Nazira Oktaviani', 'A1B02310091', 2023, 37),
+(663, 'Yasanti Etenia', 'A1C022294', 2024, 38),
+(664, 'Nyayu Dian Fermanu', 'E1B022169', 2022, 39),
+(665, 'Maulida Apriana', 'E1B022158', 2023, 40),
+(666, 'Dara Anggun Adhna Fika', 'E1S022032', 2024, 41),
+(667, 'Deya Kalisdia', 'E1S022005', 2022, 42),
+(668, 'Riza Aprilia', 'E1S022015', 2023, 43),
+(669, 'Baiq Hanisa Yasmin', 'E1S022028', 2024, 44),
+(670, 'Shahinaz Syahira', 'E1S022017', 2022, 45),
+(671, 'Ricko Muksalminan Jerowarunikus', 'A0E02310111', 2023, 46),
+(672, 'Baiq Inggid Putri Zahwa', 'L1A02310107', 2024, 47),
+(673, 'Rahadian Hidayatullah', 'F1A02310114', 2022, 48),
+(674, 'Nindya Faninda Putri', 'A1C02310173', 2023, 49),
+(675, 'Aulianov Ramadhani', 'L1A02310103', 2024, 50),
+(677, 'Rosyidah Nur Hairani', 'E1D022036', 2023, 52),
+(679, 'Risa Handayani', 'L1C02310087', 2022, 54),
+(680, 'Bunga Gea Varesa', 'J1A02310007', 2023, 55),
+(681, 'Arjun Hidayatullah', 'L1B02310071', 2024, 56),
+(682, 'Lalu Muhammad Fachrian Surya Lingga', 'F1C02310068', 2022, 57),
+(683, 'Nur Shopya Afifaturrahmah', 'G1A022008', 2023, 58),
+(684, 'Susan Tiara Nelpiana', 'D1A022295', 2024, 59),
+(685, 'Baiq Moza Fatima Dwi Kamalia', 'L1A02310007', 2022, 60),
+(686, 'Sandrina Kartikasari Pujiono', 'A1B02310193', 2023, 61),
+(687, 'Siti Fatimatuzzakhro', 'E1B02310124', 2024, 62),
+(688, 'Heppy Tasya Pibiputri', 'G1E022027', 2022, 63),
+(689, 'Lalu Sadad Fathoni', 'G1E02310024', 2023, 64),
+(690, 'Mayzania Safitri', 'J1A02310017', 2024, 65),
+(691, 'Tri Jannatun Mardiah', 'J1A02310028', 2022, 66),
+(692, 'Rahayu Wahida Putri Maulana', 'C1M02310075', 2023, 67),
+(693, 'Reinanda Taufara Akbar', 'L1A02310136', 2024, 68),
+(694, 'Rendi Setiawan', 'A0E02310074', 2022, 69),
+(695, 'Mario Benediktus Rawa Gana', 'E1D02310107', 2023, 70),
+(696, 'Keishe Tita Violeta', 'E1C02310084', 2024, 71),
+(697, 'Baiq Fitriana Dila', 'J1A02310005', 2022, 72),
+(698, 'Diaz Risky Atallah', 'L1B022041', 2023, 73),
+(699, 'Ananda Farzana Azzyaty', 'E1D022005', 2024, 74),
+(700, 'Annisa Febrina Hidayat', 'E1D022008', 2022, 75),
+(701, 'Maya Delfira Putri', 'J1A02310016', 2023, 76),
+(702, 'Fatimah Az Zahra', 'F1C022112', 2024, 77),
+(703, 'Baiq Dafina Salsabila', 'A1C02310053', 2022, 78),
+(704, 'Zyasa Dwinta Khaliesta', 'E1B022186', 2023, 79),
+(705, 'Ahmad Reza Mahendra', 'E1A022094', 2024, 80),
+(706, 'Nyoman Aldi Pradipta', 'A1B02310179', 2022, 81),
+(707, 'Adelia Anatia Safitri', 'D1A02310089', 2023, 82),
+(708, 'Ni Nyoman Ayu Mega Lestari', 'C1G022125', 2024, 83),
+(709, 'Wilda Aprilianda', 'E1S02310092', 2022, 84),
+(710, 'Siti Raehanun', 'L1C022087', 2023, 85),
+(711, 'Nilam Saqinah Maharani', 'C1B022016', 2024, 86),
+(712, 'Meili Angelina Rahma', 'C1K02310041', 2022, 87),
+(713, 'Felicia Melinda Coulina Putri', 'J1A02310009', 2023, 88),
+(714, 'Komang Dewi Triendra Hari', 'J1A02310014', 2024, 89),
+(715, 'Maria Anastasia Maya Mau', 'J1A02310015', 2022, 90),
+(716, 'Yayu Dwi Wahyuni', 'A1A021269', 2023, 91),
+(717, 'Radika Dewi A', 'A1A021242', 2024, 92),
+(718, 'Witri Widyastuti', 'A1A021255', 2022, 93),
+(719, 'Marselena Primasati Utari', 'F1A02310090', 2023, 94),
+(720, 'Ni Kadek Gita Sri Persada', 'A1B022184', 2024, 95),
+(721, 'Nela Febiola', 'A1B022183', 2022, 96),
+(722, 'Ni Nengah Dira Windriani', 'A1B022187', 2023, 97),
+(723, 'Asty Murniati', 'E1E022225', 2024, 98),
+(724, 'M Algifari', 'E1C022078', 2022, 99),
+(725, 'Eki Wahardani', 'A0E02310041', 2023, 100),
+(727, 'nayla anugerah nisa', '112920192', 2024, 466),
+(729, '', '', 0, 2);
+
+-- --------------------------------------------------------
+
+--
+-- Struktur dari tabel `anggota_minat_bakat`
+--
+
+CREATE TABLE `anggota_minat_bakat` (
+  `id` int(11) NOT NULL,
+  `id_anggota` int(11) NOT NULL,
+  `id_minat_bakat` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data untuk tabel `anggota_minat_bakat`
+--
+
+INSERT INTO `anggota_minat_bakat` (`id`, `id_anggota`, `id_minat_bakat`) VALUES
+(1, 628, 1),
+(2, 628, 2),
+(3, 629, 2),
+(4, 629, 3),
+(5, 630, 3),
+(6, 630, 1),
+(7, 631, 4),
+(8, 631, 2),
+(9, 632, 1),
+(10, 632, 3),
+(11, 633, 2),
+(12, 633, 4),
+(13, 634, 3),
+(14, 634, 1),
+(15, 635, 4),
+(16, 635, 2),
+(17, 636, 1),
+(18, 636, 4),
+(19, 637, 2),
+(20, 637, 1),
+(21, 638, 3),
+(22, 638, 2),
+(23, 639, 4),
+(24, 639, 3),
+(25, 640, 1),
+(26, 640, 2),
+(27, 641, 2),
+(28, 641, 3),
+(29, 642, 3),
+(30, 642, 4),
+(31, 643, 4),
+(32, 643, 1),
+(33, 644, 1),
+(34, 644, 2),
+(35, 645, 2),
+(36, 645, 3),
+(37, 646, 3),
+(38, 646, 4),
+(39, 647, 4),
+(40, 647, 1),
+(41, 648, 1),
+(42, 648, 3),
+(43, 649, 2),
+(44, 649, 4),
+(45, 650, 3),
+(46, 650, 1),
+(47, 651, 4),
+(48, 651, 2),
+(49, 652, 1),
+(50, 652, 2),
+(51, 654, 3),
+(52, 654, 4),
+(53, 655, 4),
+(54, 655, 1),
+(55, 656, 1),
+(56, 656, 3),
+(57, 657, 2),
+(58, 657, 1),
+(59, 658, 3),
+(60, 658, 2),
+(61, 659, 4),
+(62, 659, 3),
+(63, 660, 1),
+(64, 660, 4),
+(65, 661, 2),
+(66, 661, 3),
+(67, 662, 3),
+(68, 662, 1),
+(69, 663, 4),
+(70, 663, 2),
+(71, 664, 1),
+(72, 664, 2),
+(73, 665, 2),
+(74, 665, 4),
+(75, 666, 3),
+(76, 666, 1),
+(77, 667, 4),
+(78, 667, 3),
+(79, 668, 1),
+(80, 668, 4),
+(81, 669, 2),
+(82, 669, 1),
+(83, 670, 3),
+(84, 670, 2),
+(85, 671, 4),
+(86, 671, 1),
+(87, 672, 1),
+(88, 672, 3),
+(89, 673, 2),
+(90, 673, 4),
+(91, 674, 3),
+(92, 674, 2),
+(93, 675, 4),
+(94, 675, 3),
+(95, 677, 2),
+(96, 677, 1),
+(97, 679, 4),
+(98, 679, 2),
+(99, 680, 1),
+(100, 680, 2),
+(101, 681, 2),
+(102, 681, 3),
+(103, 682, 3),
+(104, 682, 4),
+(105, 683, 4),
+(106, 683, 1),
+(107, 684, 1),
+(108, 684, 2),
+(109, 685, 2),
+(110, 685, 3),
+(111, 686, 3),
+(112, 686, 1),
+(113, 687, 4),
+(114, 687, 2),
+(115, 688, 1),
+(116, 688, 3),
+(117, 689, 2),
+(118, 689, 4),
+(119, 690, 3),
+(120, 690, 2),
+(121, 691, 4),
+(122, 691, 1),
+(123, 692, 1),
+(124, 692, 4),
+(125, 693, 2),
+(126, 693, 3),
+(127, 694, 3),
+(128, 694, 1),
+(129, 695, 4),
+(130, 695, 2),
+(131, 696, 1),
+(132, 696, 2),
+(133, 697, 2),
+(134, 697, 3),
+(135, 698, 3),
+(136, 698, 4),
+(137, 699, 4),
+(138, 699, 1),
+(139, 700, 1),
+(140, 700, 3),
+(141, 701, 2),
+(142, 701, 4),
+(143, 702, 3),
+(144, 702, 1),
+(145, 703, 4),
+(146, 703, 2),
+(147, 704, 1),
+(148, 704, 2),
+(149, 705, 2),
+(150, 705, 3),
+(151, 706, 3),
+(152, 706, 4),
+(153, 707, 4),
+(154, 707, 1),
+(155, 708, 1),
+(156, 708, 3),
+(157, 709, 2),
+(158, 709, 4),
+(159, 710, 3),
+(160, 710, 2),
+(161, 711, 4),
+(162, 711, 1),
+(163, 712, 1),
+(164, 712, 2),
+(165, 713, 2),
+(166, 713, 3),
+(167, 714, 3),
+(168, 714, 4),
+(169, 715, 4),
+(170, 715, 2),
+(171, 716, 1),
+(172, 716, 3),
+(173, 717, 2),
+(174, 717, 1),
+(175, 718, 3),
+(176, 718, 2),
+(177, 719, 4),
+(178, 719, 1),
+(179, 720, 1),
+(180, 720, 4),
+(181, 721, 2),
+(182, 721, 3),
+(183, 722, 3),
+(184, 722, 1),
+(185, 723, 4),
+(186, 723, 2),
+(187, 724, 1),
+(188, 724, 2),
+(189, 725, 2),
+(190, 725, 4),
+(191, 727, 1),
+(192, 727, 3),
+(193, 729, 1),
+(194, 729, 2);
 
 -- --------------------------------------------------------
 
@@ -197,10 +410,21 @@ CREATE TABLE `book_talent` (
 CREATE TABLE `evaluasi` (
   `id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL,
-  `kehadiran` int(11) DEFAULT 0,
-  `performa` text DEFAULT NULL,
-  `umpan_balik` text DEFAULT NULL
+  `umpan_balik` text DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NULL DEFAULT NULL ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data untuk tabel `evaluasi`
+--
+
+INSERT INTO `evaluasi` (`id`, `user_id`, `umpan_balik`, `created_at`, `updated_at`) VALUES
+(2, 644, 'anjay', '2025-06-03 10:36:52', '2025-06-03 14:58:15'),
+(4, 652, 'cfksDn[ jf[oc0', '2025-06-03 10:49:04', '2025-06-03 11:34:01'),
+(5, 700, 'nACN?JLB jlDBvjls FNcelKFbKEF', '2025-06-03 14:50:22', NULL),
+(11, 628, 'aku sudah lelah', '2025-06-07 04:07:14', '2025-06-07 04:07:28'),
+(12, 630, 'znv djowa\'M', '2025-06-08 05:42:23', NULL);
 
 -- --------------------------------------------------------
 
@@ -250,30 +474,7 @@ INSERT INTO `jadwal_kondisional` (`id`, `id_minat_bakat`, `tanggal`, `jam`, `ket
 (2, 3, '2025-05-27', '16:30:00', 'Latihan khusus persiapan kompetisi Modern Dance'),
 (3, 5, '2025-06-01', '10:00:00', 'Workshop akting untuk Teater'),
 (4, 7, '2025-06-03', '13:00:00', 'Pengambilan footage dokumentasi untuk Videografi'),
-(5, 10, '2025-06-05', '15:30:00', 'Latihan intensif persiapan konser Musik Band');
-
--- --------------------------------------------------------
-
---
--- Struktur dari tabel `jadwal_latihan`
---
-
-CREATE TABLE `jadwal_latihan` (
-  `id` int(11) NOT NULL,
-  `bidang_minat` varchar(100) NOT NULL,
-  `jam` time NOT NULL,
-  `tanggal` date DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data untuk tabel `jadwal_latihan`
---
-
-INSERT INTO `jadwal_latihan` (`id`, `bidang_minat`, `jam`, `tanggal`) VALUES
-(1, 'Tari Tradisional', '15:00:00', NULL),
-(2, 'Modern Dance', '16:30:00', NULL),
-(3, 'Kontemporer', '18:00:00', NULL),
-(4, 'Requested', '14:00:00', NULL);
+(6, 8, '2025-06-17', '21:37:00', 'latihan membuat perbedaan alis penari laki laki dan perempuan dalam pakem jawa bali');
 
 -- --------------------------------------------------------
 
@@ -284,6 +485,8 @@ INSERT INTO `jadwal_latihan` (`id`, `bidang_minat`, `jam`, `tanggal`) VALUES
 CREATE TABLE `jadwal_rutin` (
   `id` int(11) NOT NULL,
   `id_minat_bakat` int(11) NOT NULL,
+  `hari` varchar(20) NOT NULL,
+  `jam` time NOT NULL,
   `durasi_latihan` int(11) NOT NULL,
   `mentor` varchar(100) NOT NULL,
   `id_bidang` int(11) DEFAULT NULL
@@ -293,17 +496,17 @@ CREATE TABLE `jadwal_rutin` (
 -- Dumping data untuk tabel `jadwal_rutin`
 --
 
-INSERT INTO `jadwal_rutin` (`id`, `id_minat_bakat`, `durasi_latihan`, `mentor`, `id_bidang`) VALUES
-(8, 1, 2, 'Budi Santoso', 1),
-(9, 2, 3, 'Siti Aisyah', 1),
-(10, 3, 2, 'Rizky Pratama', 1),
-(11, 5, 2, 'Indra Wijaya', 3),
-(12, 6, 2, 'Dewi Ambarwati', 3),
-(13, 7, 2, 'Teguh Saputra', 3),
-(14, 8, 2, 'Lina Kartika', 3),
-(15, 10, 3, 'Aldi Ramadhan', 2),
-(16, 11, 2, 'Rina Putri', 2),
-(17, 12, 2, 'Farhan Malik', 2);
+INSERT INTO `jadwal_rutin` (`id`, `id_minat_bakat`, `hari`, `jam`, `durasi_latihan`, `mentor`, `id_bidang`) VALUES
+(8, 1, 'Senin', '17:00:00', 3, 'Budi Santoso', 1),
+(9, 2, 'Selasa', '17:00:00', 3, 'Siti Aisyah', 1),
+(10, 3, 'Rabu', '18:00:00', 2, 'Rizky Pratama', 1),
+(11, 5, 'Kamis', '19:00:00', 2, 'Indra Wijaya', 3),
+(12, 6, 'Jumat', '20:00:00', 2, 'Dewi Ambarwati', 3),
+(13, 7, 'Sabtu', '21:00:00', 2, 'Teguh Saputra', 3),
+(14, 8, 'Minggu', '22:00:00', 2, 'Lina Kartika', 3),
+(15, 10, 'Senin', '16:30:00', 3, 'Aldi Ramadhan', 2),
+(16, 11, 'Selasa', '17:30:00', 2, 'Rina Putri', 2),
+(17, 12, 'Rabu', '18:30:00', 2, 'Farhan Malik', 2);
 
 -- --------------------------------------------------------
 
@@ -427,11 +630,11 @@ CREATE TABLE `program_kerja` (
 --
 
 INSERT INTO `program_kerja` (`id`, `nama_program`, `tanggal_mulai`, `tanggal_selesai`, `deskripsi`, `pj_pengurus`, `ketua_panitia`, `status`, `tanggal_selesai_agenda`) VALUES
-(1, 'Pelatihan Dasar', '2024-07-01', '2024-07-05', 'Pelatihan dasar untuk anggota baru.', NULL, NULL, 'Perencanaan', NULL),
-(2, 'Festival Seni', '2024-08-10', '2024-08-12', 'Festival seni tahunan.', NULL, NULL, 'Perencanaan', NULL),
-(3, 'Pengabdian Masyarakat', '2024-09-01', '2024-09-03', 'Kegiatan sosial di desa binaan.', NULL, NULL, 'Perencanaan', NULL),
-(4, 'Workshop Musik', '2024-10-15', '2024-10-16', 'Workshop musik bersama mentor nasional.', NULL, NULL, 'Perencanaan', NULL),
-(5, 'Lomba Tari', '2024-11-20', '2024-11-21', 'Lomba tari antar sekolah.', NULL, NULL, 'Perencanaan', NULL);
+(1, 'Pelatihan Dasar', '2024-07-01', '2024-07-05', 'Pelatihan dasar untuk anggota baru.', 1, 720, 'Perencanaan', '0000-00-00'),
+(2, 'Festival Seni', '2024-08-10', '2024-08-12', 'Festival seni tahunan.', 2, NULL, 'Perencanaan', NULL),
+(3, 'Pengabdian Masyarakat', '2024-09-01', '2024-09-03', 'Kegiatan sosial di desa binaan.', 3, NULL, 'Perencanaan', NULL),
+(4, 'Workshop Musik', '2024-10-15', '2024-10-16', 'Workshop musik bersama mentor nasional.', 4, NULL, 'Perencanaan', NULL),
+(5, 'Lomba Tari', '2024-11-20', '2024-11-21', 'Lomba tari antar sekolah.', 5, NULL, 'Perencanaan', NULL);
 
 -- --------------------------------------------------------
 
@@ -455,7 +658,7 @@ INSERT INTO `progress_proker` (`id`, `id_program`, `laporan`, `tanggal_update`) 
 (2, 2, 'FAN AEHFIJJF', '2025-06-02 22:13:39'),
 (3, 2, 'kknca;sh AJSIJfaJS DO', '2025-06-02 22:13:47'),
 (4, 2, 'asncAJSN JADJAMDakndia ', '2025-06-02 22:15:11'),
-(5, 1, 'annajya', '2025-06-02 22:26:17');
+(5, 1, 'AAU\r\n', '2025-06-05 11:40:04');
 
 -- --------------------------------------------------------
 
@@ -994,7 +1197,9 @@ INSERT INTO `users` (`id`, `username`, `password`, `role`) VALUES
 (462, 'aida_cinta_mentari', 'E1D02310048', 'anggota'),
 (463, 'm_arif_aditya', 'E1D02410204', 'anggota'),
 (464, 'giorgi_fredrick_maitimu', 'A0E02410028', 'anggota'),
-(465, 'olivia_klariza', 'A1C02410105', 'anggota');
+(465, 'olivia_klariza', 'A1C02410105', 'anggota'),
+(466, 'nayla', '$2y$10$aDCvgjfTlPhl65Il6Ff2c.b4Kp9HwZq.jSYhJuRfqpEg8MX8T2bjC', 'anggota'),
+(467, 'alya', '$2y$10$qb8VlRXy1H4BdasJM6Oz7.kqlPlgLDSPpo.epIuwQ4qiNGFDUDG56', 'anggota');
 
 --
 -- Indexes for dumped tables
@@ -1016,6 +1221,14 @@ ALTER TABLE `anggota`
   ADD KEY `user_id` (`user_id`);
 
 --
+-- Indeks untuk tabel `anggota_minat_bakat`
+--
+ALTER TABLE `anggota_minat_bakat`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `id_anggota` (`id_anggota`),
+  ADD KEY `id_minat_bakat` (`id_minat_bakat`);
+
+--
 -- Indeks untuk tabel `bidang`
 --
 ALTER TABLE `bidang`
@@ -1032,7 +1245,7 @@ ALTER TABLE `book_talent`
 --
 ALTER TABLE `evaluasi`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `user_id` (`user_id`);
+  ADD UNIQUE KEY `unique_user` (`user_id`);
 
 --
 -- Indeks untuk tabel `inventaris`
@@ -1046,12 +1259,6 @@ ALTER TABLE `inventaris`
 ALTER TABLE `jadwal_kondisional`
   ADD PRIMARY KEY (`id`),
   ADD KEY `fk_minat_bakat` (`id_minat_bakat`);
-
---
--- Indeks untuk tabel `jadwal_latihan`
---
-ALTER TABLE `jadwal_latihan`
-  ADD PRIMARY KEY (`id`);
 
 --
 -- Indeks untuk tabel `jadwal_rutin`
@@ -1140,7 +1347,13 @@ ALTER TABLE `absensi`
 -- AUTO_INCREMENT untuk tabel `anggota`
 --
 ALTER TABLE `anggota`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=726;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=730;
+
+--
+-- AUTO_INCREMENT untuk tabel `anggota_minat_bakat`
+--
+ALTER TABLE `anggota_minat_bakat`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=195;
 
 --
 -- AUTO_INCREMENT untuk tabel `bidang`
@@ -1158,7 +1371,7 @@ ALTER TABLE `book_talent`
 -- AUTO_INCREMENT untuk tabel `evaluasi`
 --
 ALTER TABLE `evaluasi`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT untuk tabel `inventaris`
@@ -1170,13 +1383,7 @@ ALTER TABLE `inventaris`
 -- AUTO_INCREMENT untuk tabel `jadwal_kondisional`
 --
 ALTER TABLE `jadwal_kondisional`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
-
---
--- AUTO_INCREMENT untuk tabel `jadwal_latihan`
---
-ALTER TABLE `jadwal_latihan`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT untuk tabel `jadwal_rutin`
@@ -1242,7 +1449,7 @@ ALTER TABLE `talent`
 -- AUTO_INCREMENT untuk tabel `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=466;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=468;
 
 --
 -- Ketidakleluasaan untuk tabel pelimpahan (Dumped Tables)
@@ -1261,10 +1468,17 @@ ALTER TABLE `anggota`
   ADD CONSTRAINT `anggota_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
 
 --
+-- Ketidakleluasaan untuk tabel `anggota_minat_bakat`
+--
+ALTER TABLE `anggota_minat_bakat`
+  ADD CONSTRAINT `anggota_minat_bakat_ibfk_1` FOREIGN KEY (`id_anggota`) REFERENCES `anggota` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `anggota_minat_bakat_ibfk_2` FOREIGN KEY (`id_minat_bakat`) REFERENCES `minat_bakat` (`id_minat_bakat`) ON DELETE CASCADE;
+
+--
 -- Ketidakleluasaan untuk tabel `evaluasi`
 --
 ALTER TABLE `evaluasi`
-  ADD CONSTRAINT `evaluasi_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
+  ADD CONSTRAINT `fk_evaluasi_anggota` FOREIGN KEY (`user_id`) REFERENCES `anggota` (`id`) ON DELETE CASCADE;
 
 --
 -- Ketidakleluasaan untuk tabel `jadwal_kondisional`
