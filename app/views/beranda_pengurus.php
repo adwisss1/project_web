@@ -1,4 +1,5 @@
 <?php
+
 session_start();
 require_once __DIR__ . '/../config/config.php';
 
@@ -15,17 +16,13 @@ $stmt = $mysqli->prepare("SELECT id_pengurus, nama_pengurus, nim, angkatan, jaba
 $stmt->execute();
 $pengurus_result = $stmt->get_result();
 
-// Ambil daftar anggota dengan informasi minat bakat
-$stmt = $mysqli->prepare("
-    SELECT anggota.id, anggota.nama, anggota.nra, anggota.user_id, anggota.id_minat_bakat, 
-           minat_bakat.nama_minat_bakat 
-    FROM anggota 
-    LEFT JOIN minat_bakat ON anggota.id_minat_bakat = minat_bakat.id_minat_bakat");
+// Ambil daftar anggota (tanpa join ke minat bakat, karena sudah pakai relasi many-to-many)
+$stmt = $mysqli->prepare("SELECT id, nama, nra, user_id, angkatan FROM anggota");
 $stmt->execute();
 $anggota_result = $stmt->get_result();
 
 // Ambil daftar minat bakat
-$stmt = $mysqli->prepare("SELECT id_minat_bakat, nama_minat_bakat, enrollment_key,id_bidang FROM minat_bakat");
+$stmt = $mysqli->prepare("SELECT id_minat_bakat, nama_minat_bakat, enrollment_key, id_bidang FROM minat_bakat");
 $stmt->execute();
 $minat_result = $stmt->get_result();
 
@@ -74,7 +71,6 @@ $materi_result = $stmt->get_result();
         ?>
     </table>
 
-
     <h3>Daftar Minat Bakat</h3>
     <table border="1">
         <tr>
@@ -87,7 +83,6 @@ $materi_result = $stmt->get_result();
         $no = 1;
         // Ambil nama bidang dari tabel bidang jika ada relasi
         while ($minat = $minat_result->fetch_assoc()) {
-            // Ambil nama bidang jika ada kolom id_bidang
             $nama_bidang = "-";
             if (isset($minat['id_bidang']) && $minat['id_bidang']) {
                 $stmt_bidang = $mysqli->prepare("SELECT nama_bidang FROM bidang WHERE id_bidang = ?");

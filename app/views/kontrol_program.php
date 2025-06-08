@@ -1,8 +1,16 @@
 <?php
 require_once __DIR__ . '/../config/config.php';
 
-// Ambil data program kerja lengkap
-$stmt = $mysqli->prepare("SELECT id, nama_program, tanggal_mulai, tanggal_selesai, deskripsi, pj_pengurus, ketua_panitia, status, tanggal_selesai_agenda FROM program_kerja");
+// Ambil data program kerja lengkap, join ke pengurus dan anggota untuk ambil nama
+$stmt = $mysqli->prepare("
+    SELECT pk.id, pk.nama_program, pk.tanggal_mulai, pk.tanggal_selesai, pk.deskripsi, 
+           pk.pj_pengurus, pengurus.nama_pengurus, 
+           pk.ketua_panitia, anggota.nama AS nama_ketua, 
+           pk.status, pk.tanggal_selesai_agenda
+    FROM program_kerja pk
+    LEFT JOIN pengurus ON pk.pj_pengurus = pengurus.id_pengurus
+    LEFT JOIN anggota ON pk.ketua_panitia = anggota.id
+");
 $stmt->execute();
 $program_result = $stmt->get_result();
 
@@ -14,9 +22,10 @@ $filter_program = isset($_GET['filter_program']) ? intval($_GET['filter_program'
 
 // Query progress sesuai filter
 $progress_sql = "
-    SELECT p.id, p.id_program, pk.nama_program, p.laporan, p.tanggal_update, pk.pj_pengurus
+    SELECT p.id, p.id_program, pk.nama_program, p.laporan, p.tanggal_update, pengurus.nama_pengurus
     FROM progress_proker p
     JOIN program_kerja pk ON p.id_program = pk.id
+    LEFT JOIN pengurus ON pk.pj_pengurus = pengurus.id_pengurus
 ";
 if ($filter_program) {
     $progress_sql .= " WHERE p.id_program = $filter_program ";
@@ -51,8 +60,8 @@ $progress_result = $mysqli->query($progress_sql);
             <td><?= htmlspecialchars($program["tanggal_selesai"]); ?></td>
             <td><?= htmlspecialchars($program["tanggal_selesai_agenda"]); ?></td>
             <td><?= htmlspecialchars($program["deskripsi"]); ?></td>
-            <td><?= htmlspecialchars($program["pj_pengurus"]); ?></td>
-            <td><?= htmlspecialchars($program["ketua_panitia"]); ?></td>
+            <td><?= htmlspecialchars($program["nama_pengurus"] ?? '-'); ?></td>
+            <td><?= htmlspecialchars($program["nama_ketua"] ?? '-'); ?></td>
             <td>
                 <?php if (strtolower($program["status"]) == "on progress") { ?>
                     <a href="#progress-proker" style="color:green;">On Progress</a>
@@ -106,7 +115,7 @@ $progress_result = $mysqli->query($progress_sql);
             while ($progress = $progress_result->fetch_assoc()) { ?>
                 <tr>
                     <td><?= htmlspecialchars($progress["nama_program"]); ?></td>
-                    <td><?= htmlspecialchars($progress["pj_pengurus"]); ?></td>
+                    <td><?= htmlspecialchars($progress["nama_pengurus"] ?? '-'); ?></td>
                     <td><?= nl2br(htmlspecialchars($progress["laporan"])); ?></td>
                     <td><?= htmlspecialchars($progress["tanggal_update"]); ?></td>
                     <td>
@@ -116,14 +125,19 @@ $progress_result = $mysqli->query($progress_sql);
             <?php }
         } else {
             // Ambil nama program kerja yang dipilih untuk tetap tampilkan baris
-            $stmt_prog = $mysqli->prepare("SELECT nama_program, pj_pengurus FROM program_kerja WHERE id=?");
+            $stmt_prog = $mysqli->prepare("
+                SELECT pk.nama_program, pengurus.nama_pengurus 
+                FROM program_kerja pk
+                LEFT JOIN pengurus ON pk.pj_pengurus = pengurus.id_pengurus
+                WHERE pk.id=?
+            ");
             $stmt_prog->bind_param('i', $filter_program);
             $stmt_prog->execute();
-            $stmt_prog->bind_result($nama_program, $pj_pengurus);
+            $stmt_prog->bind_result($nama_program, $nama_pengurus);
             if ($stmt_prog->fetch()) { ?>
                 <tr>
                     <td><?= htmlspecialchars($nama_program); ?></td>
-                    <td><?= htmlspecialchars($pj_pengurus); ?></td>
+                    <td><?= htmlspecialchars($nama_pengurus ?? '-'); ?></td>
                     <td colspan="2" style="text-align:center;">Belum ada progress. Silakan <a href="edit_progress.php?id_program=<?= $filter_program; ?>">isi progress</a>.</td>
                     <td>
                         <a href="edit_progress.php?id_program=<?= $filter_program; ?>">Tambah Progress</a>

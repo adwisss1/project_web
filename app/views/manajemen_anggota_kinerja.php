@@ -4,7 +4,7 @@ session_start();
 require_once __DIR__ . '/../config/config.php';
 
 // Pastikan user adalah pengurus
-if (!isset($_SESSION["user"]) || $_SESSION["role"] !== "pengurus") {
+if (!isset($_SESSION["user"]) || $_SESSION["user"]["role"] !== "pengurus") {
     header("Location: ../login.php");
     exit();
 }
@@ -27,9 +27,8 @@ $offset = ($page - 1) * $per_page;
 
 // Query anggota dengan filter (untuk count)
 $count_query = "
-    SELECT COUNT(*) 
+    SELECT COUNT(DISTINCT anggota.id) 
     FROM anggota 
-    LEFT JOIN minat_bakat ON anggota.id_minat_bakat = minat_bakat.id_minat_bakat
     WHERE 1
 ";
 $count_params = [];
@@ -41,7 +40,7 @@ if ($filter_angkatan !== '') {
     $count_types .= 'i';
 }
 if ($filter_minat !== '') {
-    $count_query .= " AND anggota.id_minat_bakat = ? ";
+    $count_query .= " AND EXISTS (SELECT 1 FROM anggota_minat_bakat amb WHERE amb.id_anggota = anggota.id AND amb.id_minat_bakat = ?) ";
     $count_params[] = $filter_minat;
     $count_types .= 'i';
 }
@@ -65,10 +64,8 @@ $total_pages = max(1, ceil($total_rows / $per_page));
 
 // Query anggota dengan filter dan LIMIT
 $query = "
-    SELECT DISTINCT anggota.id, anggota.nama, anggota.nra, anggota.user_id, anggota.id_minat_bakat, anggota.angkatan,
-           minat_bakat.nama_minat_bakat 
+    SELECT DISTINCT anggota.id, anggota.nama, anggota.nra, anggota.user_id, anggota.angkatan
     FROM anggota 
-    LEFT JOIN minat_bakat ON anggota.id_minat_bakat = minat_bakat.id_minat_bakat
     WHERE 1
 ";
 $params = [];
@@ -80,7 +77,7 @@ if ($filter_angkatan !== '') {
     $types .= 'i';
 }
 if ($filter_minat !== '') {
-    $query .= " AND anggota.id_minat_bakat = ? ";
+    $query .= " AND EXISTS (SELECT 1 FROM anggota_minat_bakat amb WHERE amb.id_anggota = anggota.id AND amb.id_minat_bakat = ?) ";
     $params[] = $filter_minat;
     $types .= 'i';
 }
@@ -103,35 +100,33 @@ if (!empty($params)) {
 $stmt->execute();
 $anggota_result = $stmt->get_result();
 
-// Ambil evaluasi keaktifan anggota (tabel lama, jika masih ingin ditampilkan)
-$stmt2 = $mysqli->prepare("SELECT user_id, umpan_balik FROM evaluasi");
-$stmt2->execute();
-$evaluasi_result = $stmt2->get_result();
-
-// --- Tambahan: Filter & Tabel Evaluasi Keaktifan per Minat Bakat ---
-$minat_result_eval = $mysqli->query("SELECT id_minat_bakat, nama_minat_bakat FROM minat_bakat");
-$filter_minat_evaluasi = isset($_GET['minat_evaluasi']) ? $_GET['minat_evaluasi'] : '';
-
-$anggota_evaluasi_result = null;
-if ($filter_minat_evaluasi !== '') {
-    $stmt_eval = $mysqli->prepare("
-        SELECT a.id, a.nama, a.nra, a.angkatan, mb.nama_minat_bakat,
-            (SELECT COUNT(*) FROM absensi WHERE absensi.user_id = a.user_id) AS jumlah_absen
-        FROM anggota a
-        LEFT JOIN minat_bakat mb ON a.id_minat_bakat = mb.id_minat_bakat
-        WHERE a.id_minat_bakat = ?
-        ORDER BY jumlah_absen ASC, a.nama ASC
-    ");
-    $stmt_eval->bind_param("i", $filter_minat_evaluasi);
-    $stmt_eval->execute();
-    $anggota_evaluasi_result = $stmt_eval->get_result();
+// Ambil semua minat bakat anggota (relasi many-to-many)
+$anggota_minat = [];
+$minat_sql = "SELECT amb.id_anggota, mb.nama_minat_bakat 
+              FROM anggota_minat_bakat amb 
+              JOIN minat_bakat mb ON amb.id_minat_bakat = mb.id_minat_bakat";
+$minat_res = $mysqli->query($minat_sql);
+while ($row = $minat_res->fetch_assoc()) {
+    $anggota_minat[$row['id_anggota']][] = $row['nama_minat_bakat'];
 }
+
+// Fungsi untuk ambil evaluasi anggota
+function getEvaluasiAnggota($mysqli, $anggota_id) {
+    $stmt = $mysqli->prepare("SELECT umpan_balik FROM evaluasi WHERE user_id = ?");
+    $stmt->bind_param("i", $anggota_id);
+    $stmt->execute();
+    $stmt->bind_result($eval);
+    $stmt->fetch();
+    $stmt->close();
+    return $eval;
+}
+
 ?>
 
 <?php include __DIR__ . '/header.php'; ?>
 
 <a href="beranda_pengurus.php">Kembali ke Beranda Pengurus</a>
-<h2>Manajemen & Evaluasi Anggota</h2>
+<h2>Manajemen Anggota</h2>
 
 <!-- Form Filter -->
 <form method="get" style="margin-bottom:16px;">
@@ -175,6 +170,7 @@ if ($filter_minat_evaluasi !== '') {
         <th>Angkatan</th>
         <th>Minat Bakat</th>
         <th>Aksi</th>
+        <th>View Evaluasi</th>
     </tr>
     <?php while ($anggota = $anggota_result->fetch_assoc()) { ?>
         <tr>
@@ -182,10 +178,21 @@ if ($filter_minat_evaluasi !== '') {
             <td><?= htmlspecialchars($anggota["nama"]); ?></td>
             <td><?= htmlspecialchars($anggota["nra"]); ?></td>
             <td><?= htmlspecialchars($anggota["angkatan"]); ?></td>
-            <td><?= htmlspecialchars($anggota["nama_minat_bakat"] ?? "Belum Terdaftar"); ?></td>
             <td>
-            <a href="anggota_crud.php?mode=edit&id=<?= $anggota["id"]; ?>">Edit</a> |
-            <a href="anggota_crud.php?mode=delete&id=<?= $anggota["id"]; ?>" onclick="return confirm('Yakin ingin menghapus anggota ini?')">Hapus</a>
+                <?php
+                if (!empty($anggota_minat[$anggota["id"]])) {
+                    echo htmlspecialchars(implode(', ', $anggota_minat[$anggota["id"]]));
+                } else {
+                    echo "<i>Belum Terdaftar</i>";
+                }
+                ?>
+            </td>
+            <td>
+                <a href="anggota_crud.php?mode=edit&id=<?= $anggota["id"]; ?>">Edit</a> |
+                <a href="anggota_crud.php?mode=delete&id=<?= $anggota["id"]; ?>" onclick="return confirm('Yakin ingin menghapus anggota ini?')">Hapus</a>
+            </td>
+            <td>
+                <a href="evaluasi_anggota.php?id=<?= $anggota["id"]; ?>&mode=view" target="_blank">View Evaluasi</a>
             </td>
         </tr>
     <?php } ?>
@@ -201,7 +208,5 @@ if ($filter_minat_evaluasi !== '') {
         <a href="?<?= http_build_query(array_merge($_GET, ['page' => $page + 1])) ?>">Selanjutnya</a>
     <?php endif; ?>
 </div>
-
-<a href="evaluasi_keaktifan.php" style="margin-left:10px;">Evaluasi Keaktifan Anggota</a>
 
 <?php include __DIR__ . '/footer.php'; ?>

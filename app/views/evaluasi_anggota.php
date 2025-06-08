@@ -1,4 +1,5 @@
 <?php
+
 session_start();
 require_once __DIR__ . '/../config/config.php';
 
@@ -8,14 +9,54 @@ if (!isset($_SESSION["user"]) || $_SESSION["user"]["role"] !== "pengurus") {
     exit();
 }
 
+// Jika ada parameter id, tampilkan evaluasi spesifik anggota
+if (isset($_GET['id']) && intval($_GET['id']) > 0 && (!isset($_GET['mode']) || $_GET['mode'] === 'view')) {
+    $anggota_id = intval($_GET['id']);
+    // Ambil data anggota
+    $stmt = $mysqli->prepare("SELECT nama, nra, angkatan FROM anggota WHERE id = ?");
+    $stmt->bind_param("i", $anggota_id);
+    $stmt->execute();
+    $stmt->bind_result($nama, $nra, $angkatan);
+    $stmt->fetch();
+    $stmt->close();
+
+    // Ambil evaluasi anggota
+    $stmt = $mysqli->prepare("SELECT umpan_balik FROM evaluasi WHERE user_id = ?");
+    $stmt->bind_param("i", $anggota_id);
+    $stmt->execute();
+    $stmt->bind_result($umpan_balik);
+    $stmt->fetch();
+    $stmt->close();
+
+    include __DIR__ . '/header.php';
+    ?>
+    <h2>Evaluasi Anggota</h2>
+    <table border="1">
+        <tr><th>Nama</th><td><?= htmlspecialchars($nama ?? '-') ?></td></tr>
+        <tr><th>NRA</th><td><?= htmlspecialchars($nra ?? '-') ?></td></tr>
+        <tr><th>Angkatan</th><td><?= htmlspecialchars($angkatan ?? '-') ?></td></tr>
+        <tr><th>Umpan Balik</th><td><?= nl2br(htmlspecialchars($umpan_balik ?? 'Belum ada evaluasi')) ?></td></tr>
+    </table>
+    <br>
+    <a href="javascript:window.close();" class="btn">Tutup</a>
+    <?php
+    include __DIR__ . '/footer.php';
+    exit();
+}
+
 // Ambil daftar minat bakat
 $minat_result = $mysqli->query("SELECT id_minat_bakat, nama_minat_bakat FROM minat_bakat");
 $minat_evaluasi = isset($_GET['minat_evaluasi']) ? intval($_GET['minat_evaluasi']) : 0;
 
-// Ambil anggota sesuai filter minat bakat
+// Ambil anggota sesuai filter minat bakat (gunakan tabel relasi many-to-many)
 $anggota = [];
 if ($minat_evaluasi) {
-    $stmt = $mysqli->prepare("SELECT id, nama, nra, angkatan FROM anggota WHERE id_minat_bakat = ?");
+    $stmt = $mysqli->prepare("
+        SELECT a.id, a.nama, a.nra, a.angkatan
+        FROM anggota a
+        JOIN anggota_minat_bakat amb ON amb.id_anggota = a.id
+        WHERE amb.id_minat_bakat = ?
+    ");
     $stmt->bind_param("i", $minat_evaluasi);
     $stmt->execute();
     $result = $stmt->get_result();
@@ -68,8 +109,8 @@ if (($mode === 'add' || $mode === 'edit') && $anggota_id > 0) {
         $umpan_balik = trim($_POST['umpan_balik']);
         if ($mode === 'add') {
             // Insert evaluasi dengan validasi anggota
-            $stmt = $mysqli->prepare("INSERT INTO evaluasi (user_id, umpan_balik) SELECT ?, ? FROM anggota WHERE id = ?");
-            $stmt->bind_param("isi", $anggota_id, $umpan_balik, $anggota_id);
+            $stmt = $mysqli->prepare("INSERT INTO evaluasi (user_id, umpan_balik) VALUES (?, ?)");
+            $stmt->bind_param("is", $anggota_id, $umpan_balik);
             if ($stmt->execute()) {
                 $success = "Evaluasi berhasil ditambahkan.";
                 header("Location: evaluasi_anggota.php?minat_evaluasi=$minat_evaluasi");
@@ -113,6 +154,8 @@ if (($mode === 'add' || $mode === 'edit') && $anggota_id > 0) {
         <button type="submit"><?= $mode === 'add' ? 'Tambah' : 'Update' ?></button>
         <a href="evaluasi_anggota.php?minat_evaluasi=<?= $minat_evaluasi ?>">Batal</a>
     </form>
+    <br>
+    <a href="beranda_pengurus.php" class="btn">Kembali ke Beranda Pengurus</a>
     <?php include __DIR__ . '/footer.php'; ?>
     <?php
     exit();
@@ -146,6 +189,7 @@ if (($mode === 'add' || $mode === 'edit') && $anggota_id > 0) {
             <th>Angkatan</th>
             <th>Evaluasi</th>
             <th>Aksi</th>
+            <th>Lihat Evaluasi</th>
         </tr>
         <?php foreach ($anggota as $a): ?>
             <tr>
@@ -158,9 +202,15 @@ if (($mode === 'add' || $mode === 'edit') && $anggota_id > 0) {
                         <?= getEvaluasi($mysqli, $a['id']) ? 'Edit' : 'Tambah' ?>
                     </a>
                 </td>
+                <td>
+                    <a href="evaluasi_anggota.php?id=<?= $a['id'] ?>&mode=view" target="_blank">View Evaluasi</a>
+                </td>
             </tr>
         <?php endforeach; ?>
     </table>
 <?php endif; ?>
+
+<br>
+<a href="beranda_pengurus.php" class="btn">Kembali ke Beranda Pengurus</a>
 
 <?php include __DIR__ . '/footer.php'; ?>

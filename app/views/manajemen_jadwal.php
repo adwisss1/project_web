@@ -1,4 +1,5 @@
 <?php
+
 session_start();
 require_once __DIR__ . '/../config/config.php';
 
@@ -69,7 +70,7 @@ while ($row = $jadwal_kondisional_result->fetch_assoc()) {
 
     <!-- Bagian 2: Form Tambah Jadwal Kondisional -->
     <h3>Tambah Jadwal Kondisional</h3>
-    <form method="POST" action="controllers/tambah_jadwal.php">
+    <form method="POST" action="/SI-BIRAMA/app/controllers/tambah_jadwal.php">
         <label for="id_minat_bakat">Minat Bakat:</label>
         <select name="id_minat_bakat" required>
             <?php
@@ -119,7 +120,7 @@ while ($row = $jadwal_kondisional_result->fetch_assoc()) {
                 <td><?= htmlspecialchars($jadwal["jam"]); ?></td>
                 <td><?= htmlspecialchars($jadwal["keterangan"]); ?></td>
                 <td>
-                    <form method="POST" action="controllers/hapus_jadwal.php" onsubmit="return confirm('Yakin ingin menghapus jadwal ini?');" style="display:inline;">
+                    <form method="POST" action="/SI-BIRAMA/app/controllers/hapus_jadwal.php" onsubmit="return confirm('Yakin ingin menghapus jadwal ini?');" style="display:inline;">
                         <input type="hidden" name="id" value="<?= $jadwal["id"]; ?>">
                         <button type="submit" style="color:red;">Hapus</button>
                     </form>

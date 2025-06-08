@@ -19,10 +19,15 @@ $evaluasi_result = $stmt->get_result();
 $evaluasi = $evaluasi_result->fetch_assoc();
 
 // Ambil semua id_minat_bakat yang diikuti anggota
-$stmt = $mysqli->prepare("SELECT mb.id_minat_bakat, mb.nama_minat_bakat 
-    FROM anggota a
-    JOIN minat_bakat mb ON a.id_minat_bakat = mb.id_minat_bakat 
-    WHERE a.user_id = ?");
+// Asumsi: ada tabel relasi anggota_minat_bakat (id_anggota, id_minat_bakat)
+// dan tabel anggota memiliki kolom id dan user_id
+$stmt = $mysqli->prepare("
+    SELECT mb.id_minat_bakat, mb.nama_minat_bakat 
+    FROM anggota_minat_bakat amb
+    JOIN anggota a ON amb.id_anggota = a.id
+    JOIN minat_bakat mb ON amb.id_minat_bakat = mb.id_minat_bakat
+    WHERE a.user_id = ?
+");
 $stmt->bind_param("i", $user_id);
 $stmt->execute();
 $minat_result = $stmt->get_result();
