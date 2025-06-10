@@ -19,16 +19,24 @@ $minat_result = $mysqli->query("SELECT id_minat_bakat, nama_minat_bakat FROM min
 // Untuk edit, ambil data anggota
 $nama = $nra = $angkatan = $id_minat_bakat = '';
 if ($mode === 'edit' && $id) {
-    $stmt = $mysqli->prepare("SELECT nama, nra, angkatan, id_minat_bakat FROM anggota WHERE id = ?");
+    $stmt = $mysqli->prepare("SELECT nama, nra, angkatan FROM anggota WHERE id = ?");
     $stmt->bind_param("i", $id);
     $stmt->execute();
-    $stmt->bind_result($nama, $nra, $angkatan, $id_minat_bakat);
+    $stmt->bind_result($nama, $nra, $angkatan);
     $stmt->fetch();
     $stmt->close();
     if (!$nama) {
         echo "Anggota tidak ditemukan.";
         exit();
     }
+    // Ambil minat bakat dari tabel relasi
+    $id_minat_bakat = '';
+    $stmt = $mysqli->prepare("SELECT id_minat_bakat FROM anggota_minat_bakat WHERE id_anggota = ?");
+    $stmt->bind_param("i", $id);
+    $stmt->execute();
+    $stmt->bind_result($id_minat_bakat);
+    $stmt->fetch();
+    $stmt->close();
 }
 
 // Proses tambah/edit
@@ -64,35 +72,54 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($mode === 'add' || $mode === 'edit
                     $user_id = $stmt->insert_id;
                     $stmt->close();
                     // Insert anggota
-                    $stmt = $mysqli->prepare("INSERT INTO anggota (user_id, nama, nra, angkatan, id_minat_bakat) VALUES (?, ?, ?, ?, ?)");
-                    $stmt->bind_param("issii", $user_id, $nama, $nra, $angkatan, $id_minat_bakat);
+                    $stmt = $mysqli->prepare("INSERT INTO anggota (user_id, nama, nra, angkatan) VALUES (?, ?, ?, ?)");
+                    $stmt->bind_param("issi", $user_id, $nama, $nra, $angkatan);
                     if ($stmt->execute()) {
+                        $id_anggota = $stmt->insert_id;
+                        $stmt->close();
+                        // Insert ke tabel relasi anggota_minat_bakat
+                        $stmt = $mysqli->prepare("INSERT INTO anggota_minat_bakat (id_anggota, id_minat_bakat) VALUES (?, ?)");
+                        $stmt->bind_param("ii", $id_anggota, $id_minat_bakat);
+                        $stmt->execute();
+                        $stmt->close();
                         header("Location: manajemen_anggota_kinerja.php");
                         exit();
                     } else {
                         $error = "Gagal menambah anggota.";
+                        $stmt->close();
                     }
-                    $stmt->close();
                 } else {
                     $error = "Gagal membuat user baru.";
                 }
             }
         }
     } elseif ($mode === 'edit') {
-        $stmt = $mysqli->prepare("UPDATE anggota SET nama=?, nra=?, angkatan=?, id_minat_bakat=? WHERE id=?");
-        $stmt->bind_param("ssiii", $nama, $nra, $angkatan, $id_minat_bakat, $id);
+        $stmt = $mysqli->prepare("UPDATE anggota SET nama=?, nra=?, angkatan=? WHERE id=?");
+        $stmt->bind_param("ssii", $nama, $nra, $angkatan, $id);
         if ($stmt->execute()) {
+            $stmt->close();
+            // Update minat bakat di tabel relasi
+            $stmt = $mysqli->prepare("UPDATE anggota_minat_bakat SET id_minat_bakat=? WHERE id_anggota=?");
+            $stmt->bind_param("ii", $id_minat_bakat, $id);
+            $stmt->execute();
+            $stmt->close();
             header("Location: manajemen_anggota_kinerja.php");
             exit();
         } else {
             $error = "Gagal mengubah data anggota.";
+            $stmt->close();
         }
-        $stmt->close();
     }
 }
 
 // Proses hapus
 if ($mode === 'delete' && $id) {
+    // Hapus relasi minat bakat dulu
+    $stmt = $mysqli->prepare("DELETE FROM anggota_minat_bakat WHERE id_anggota = ?");
+    $stmt->bind_param("i", $id);
+    $stmt->execute();
+    $stmt->close();
+    // Hapus anggota
     $stmt = $mysqli->prepare("DELETE FROM anggota WHERE id = ?");
     $stmt->bind_param("i", $id);
     $stmt->execute();
