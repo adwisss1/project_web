@@ -9,7 +9,7 @@ if (!isset($_SESSION["user"]) || $_SESSION["user"]["role"] !== "anggota") {
 
 $user_id = $_SESSION["user"]["id"];
 
-// Ambil informasi minat bakat anggota (JOIN ke tabel minat_bakat) -- PERBAIKAN QUERY
+// Ambil informasi minat bakat anggota
 $minat_query = $mysqli->query("
     SELECT mb.id_minat_bakat, mb.nama_minat_bakat 
     FROM anggota_minat_bakat amb
@@ -18,40 +18,47 @@ $minat_query = $mysqli->query("
     WHERE a.user_id = $user_id
 ");
 
-// Ambil informasi tahun kepengurusan aktif (contoh statis, bisa diambil dari database nanti)
+// Tahun kepengurusan
 $tahun_kepengurusan = "2025";
 
-// Cek apakah pengurus telah membuka sesi absensi
-$sesi_absensi_query = $mysqli->query("SELECT * FROM sesi_absensi WHERE status = 'dibuka'");
-$sesi_absensi_aktif = $sesi_absensi_query->num_rows > 0;
+// Ambil sesi absensi aktif per minat bakat
+$sesi_aktif = [];
+$q = $mysqli->query("SELECT sa.id, sa.id_jadwal, jr.id_minat_bakat 
+    FROM sesi_absensi sa
+    JOIN jadwal_rutin jr ON sa.id_jadwal = jr.id
+    WHERE sa.status = 'dibuka'
+    UNION
+    SELECT sa.id, sa.id_jadwal, jk.id_minat_bakat 
+    FROM sesi_absensi sa
+    JOIN jadwal_kondisional jk ON sa.id_jadwal = jk.id
+    WHERE sa.status = 'dibuka'
+");
+while ($row = $q->fetch_assoc()) {
+    $sesi_aktif[$row['id_minat_bakat']] = $row['id'];
+}
 ?>
 
 <?php include 'header.php'; ?>
 
 <div class="content">
     <h2>Absensi Latihan</h2>
-    
     <h3>Tahun Kepengurusan: <?= $tahun_kepengurusan; ?></h3>
-
     <h3>Bidang Minat Bakat yang Diikuti</h3>
     <table border="1">
         <tr>
             <th>Bidang Minat Bakat</th>
             <th>Presensi</th>
         </tr>
-        <?php while ($minat = $minat_query->fetch_assoc()) { ?>
+        <?php while ($minat = $minat_query->fetch_assoc()) { 
+            $id_minat = $minat["id_minat_bakat"];
+        ?>
             <tr>
                 <td><?= htmlspecialchars($minat["nama_minat_bakat"]); ?></td>
                 <td>
-                    <?php if ($sesi_absensi_aktif) { ?>
-                        <form method="POST">
-                            <input type="hidden" name="id_minat_bakat" value="<?= $minat["id_minat_bakat"]; ?>">
-                            <input type="date" name="tanggal" required>
-                            <button type="submit">Absen Hadir</button>
-                        </form>
-                    <?php } else { ?>
-                        <span style="color: red;">Sesi absensi belum dibuka</span>
-                    <?php } ?>
+                    <a href="presensi_minat.php?id_minat_bakat=<?= $id_minat ?><?= isset($sesi_aktif[$id_minat]) ? "&id_sesi_absensi=" . $sesi_aktif[$id_minat] : "" ?>" 
+                        style="padding:6px 16px; background:#800; color:#fff; border-radius:4px; text-decoration:none;<?= isset($sesi_aktif[$id_minat]) ? '' : 'opacity:0.6;pointer-events:auto;' ?>">
+                        Presensi
+                    </a>
                 </td>
             </tr>
         <?php } ?>
@@ -62,18 +69,3 @@ $sesi_absensi_aktif = $sesi_absensi_query->num_rows > 0;
 </div>
 
 <?php include 'footer.php'; ?>
-
-<?php
-// Proses Absensi
-if ($_SERVER["REQUEST_METHOD"] == "POST" && $sesi_absensi_aktif) {
-    $id_minat_bakat = $_POST["id_minat_bakat"];
-    $tanggal = $_POST["tanggal"];
-
-    $stmt = $mysqli->prepare("INSERT INTO absensi (user_id, tanggal, status, id_minat_bakat) VALUES (?, ?, 'Hadir', ?)");
-    $stmt->bind_param("isi", $user_id, $tanggal, $id_minat_bakat);
-    $stmt->execute();
-
-    header("Location: absensi.php?success=absen");
-    exit();
-}
-?>

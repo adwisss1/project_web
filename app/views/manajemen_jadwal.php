@@ -1,17 +1,18 @@
 <?php
 
+
 session_start();
 require_once __DIR__ . '/../config/config.php';
 
 // Pastikan user adalah pengurus
-if (!isset($_SESSION["user"]) || $_SESSION["role"] !== "pengurus") {
+if (!isset($_SESSION["user"]) || $_SESSION["user"]["role"] !== "pengurus") {
     header("Location: ../login.php");
     exit();
 }
 
 // Ambil daftar jadwal rutin berdasarkan minat bakat
 $stmt = $mysqli->prepare("
-    SELECT jr.id, mb.nama_minat_bakat, jr.durasi_latihan, jr.mentor 
+    SELECT jr.id, mb.nama_minat_bakat, jr.hari, jr.jam, jr.durasi_latihan, jr.mentor 
     FROM jadwal_rutin jr
     INNER JOIN minat_bakat mb ON jr.id_minat_bakat = mb.id_minat_bakat
 ");
@@ -29,6 +30,7 @@ $jadwal_kondisional_result = $stmt->get_result();
 
 // Persiapkan data untuk kalender
 $events = [];
+$jadwal_kondisional_result->data_seek(0);
 while ($row = $jadwal_kondisional_result->fetch_assoc()) {
     $events[] = [
         "title" => $row["nama_minat_bakat"] . (empty($row["keterangan"]) ? "" : " - " . $row["keterangan"]),
@@ -42,26 +44,31 @@ while ($row = $jadwal_kondisional_result->fetch_assoc()) {
 
 <div class="content">
     <h3>Daftar Jadwal Rutin</h3>
-    <table border="1">
+    <table border="1" style="width:100%;table-layout:fixed;">
         <tr>
-            <th>No</th>
+            <th style="width:40px;">No</th>
+            <th>Minat Bakat</th>
             <th>Hari</th>
             <th>Jam</th>
             <th>Durasi Latihan</th>
             <th>Mentor</th>
-            <th>Aksi</th>
+            <th style="width:180px;">Aksi</th>
         </tr>
         <?php
-        $jadwal_query = $mysqli->query("SELECT * FROM jadwal_rutin");
         $no = 1;
-        while ($jadwal = $jadwal_query->fetch_assoc()) {
+        $jadwal_rutin_result->data_seek(0);
+        while ($jadwal_rutin = $jadwal_rutin_result->fetch_assoc()) {
             echo "<tr>";
             echo "<td>{$no}</td>";
-            echo "<td>" . (isset($jadwal["hari"]) ? htmlspecialchars($jadwal["hari"]) : '-') . "</td>";
-            echo "<td>" . (isset($jadwal["jam"]) ? htmlspecialchars($jadwal["jam"]) : '-') . "</td>";
-            echo "<td>" . htmlspecialchars($jadwal["durasi_latihan"]) . "</td>";
-            echo "<td>" . htmlspecialchars($jadwal["mentor"]) . "</td>";
-            echo "<td><a href='edit_jadwal_rutin.php?id=" . urlencode($jadwal["id"]) . "'>Edit</a></td>";
+            echo "<td>" . htmlspecialchars($jadwal_rutin["nama_minat_bakat"]) . "</td>";
+            echo "<td>" . (isset($jadwal_rutin["hari"]) ? htmlspecialchars($jadwal_rutin["hari"]) : '-') . "</td>";
+            echo "<td>" . (isset($jadwal_rutin["jam"]) ? htmlspecialchars($jadwal_rutin["jam"]) : '-') . "</td>";
+            echo "<td>" . htmlspecialchars($jadwal_rutin["durasi_latihan"]) . "</td>";
+            echo "<td>" . htmlspecialchars($jadwal_rutin["mentor"]) . "</td>";
+            echo "<td>
+                <a href='edit_jadwal_rutin.php?id=" . urlencode($jadwal_rutin["id"]) . "' style='display:inline-block;margin-right:8px;padding:5px 12px;background:#007bff;color:#fff;border-radius:4px;text-decoration:none;'>Edit</a>
+                <a href='buka_sesi_absensi.php?id_jadwal={$jadwal_rutin["id"]}&tipe=rutin' style='display:inline-block;padding:5px 12px;background:#28a745;color:#fff;border-radius:4px;text-decoration:none;'>Absensi</a>
+            </td>";
             echo "</tr>";
             $no++;
         }
@@ -95,13 +102,13 @@ while ($row = $jadwal_kondisional_result->fetch_assoc()) {
 
     <!-- Tabel Jadwal Kondisional -->
     <h3>Daftar Jadwal Kondisional</h3>
-    <table border="1">
+    <table border="1" style="width:100%;table-layout:fixed;">
         <tr>
             <th>Minat Bakat</th>
             <th>Tanggal</th>
             <th>Jam</th>
             <th>Keterangan</th>
-            <th>Aksi</th>
+            <th style="width:180px;">Aksi</th>
         </tr>
         <?php
         // Ambil ulang data jadwal kondisional untuk tabel
@@ -113,28 +120,25 @@ while ($row = $jadwal_kondisional_result->fetch_assoc()) {
         ");
         $stmt->execute();
         $jadwal_kondisional_table = $stmt->get_result();
-        while ($jadwal = $jadwal_kondisional_table->fetch_assoc()) { ?>
-            <tr>
-                <td><?= htmlspecialchars($jadwal["nama_minat_bakat"]); ?></td>
-                <td><?= htmlspecialchars($jadwal["tanggal"]); ?></td>
-                <td><?= htmlspecialchars($jadwal["jam"]); ?></td>
-                <td><?= htmlspecialchars($jadwal["keterangan"]); ?></td>
-                <td>
-                    <form method="POST" action="/SI-BIRAMA/app/controllers/hapus_jadwal.php" onsubmit="return confirm('Yakin ingin menghapus jadwal ini?');" style="display:inline;">
-                        <input type="hidden" name="id" value="<?= $jadwal["id"]; ?>">
-                        <button type="submit" style="color:red;">Hapus</button>
-                    </form>
-                </td>
-            </tr>
-        <?php } ?>
+        while ($jadwal_kondisional = $jadwal_kondisional_table->fetch_assoc()) {
+            echo "<tr>";
+            echo "<td>" . htmlspecialchars($jadwal_kondisional["nama_minat_bakat"]) . "</td>";
+            echo "<td>" . htmlspecialchars($jadwal_kondisional["tanggal"]) . "</td>";
+            echo "<td>" . htmlspecialchars($jadwal_kondisional["jam"]) . "</td>";
+            echo "<td>" . htmlspecialchars($jadwal_kondisional["keterangan"]) . "</td>";
+            echo "<td style='white-space:nowrap;'>
+                <form method='POST' action='/SI-BIRAMA/app/controllers/hapus_jadwal.php' onsubmit=\"return confirm('Yakin ingin menghapus jadwal ini?');\" style='display:inline;'>
+                    <input type='hidden' name='id' value='".htmlspecialchars($jadwal_kondisional["id"])."'>
+                    
+                <button type='submit' style='color:#fff;background:#dc3545;padding:4px 10px;font-size:14px;border:none;border-radius:4px;margin-right:6px;'>Hapus</button>
+                </form>
+                <a href='buka_sesi_absensi.php?id_jadwal={$jadwal_kondisional["id"]}&tipe=kondisional' style='display:inline-block;padding:4px 10px;font-size:14px;background:#28a745;color:#fff;border-radius:4px;text-decoration:none;margin-right:6px;'>Absensi</a>
+            </td>";
+            echo "</tr>";
+        }
+        ?>
     </table>
-
-    <!-- Bagian 3: Kalender Jadwal -->
-    <h3>Kalender Jadwal Latihan</h3>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/6.1.5/main.min.css" rel="stylesheet">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/6.1.5/main.min.js"></script>
-
-    <div id="calendar"></div>
+</div>
 
     <script>
     document.addEventListener('DOMContentLoaded', function() {

@@ -110,6 +110,7 @@ $materi_result = $stmt->get_result();
         <li><a href="manajemen_jadwal.php">Manajemen Jadwal</a></li>
         <li><a href="kontrol_program.php">Kontrol Program Kerja</a></li>
         <li><a href="evaluasi_anggota.php">Evaluasi Anggota</a></li>
+        <li><a href="manajemen_materi.php">Manajemen Materi Latihan</a></li> 
     </ul>
 
     <br><br>
