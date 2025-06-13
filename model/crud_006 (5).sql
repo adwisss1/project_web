@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Waktu pembuatan: 08 Jun 2025 pada 09.19
+-- Waktu pembuatan: 13 Jun 2025 pada 11.59
 -- Versi server: 10.4.32-MariaDB
 -- Versi PHP: 8.2.12
 
@@ -30,10 +30,23 @@ SET time_zone = "+00:00";
 CREATE TABLE `absensi` (
   `id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL,
+  `id_sesi_absensi` int(11) DEFAULT NULL,
   `tanggal` date NOT NULL,
   `status_kehadiran` enum('Hadir','Tidak Hadir','Izin') NOT NULL,
   `status` enum('Hadir','Tidak Hadir') NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data untuk tabel `absensi`
+--
+
+INSERT INTO `absensi` (`id`, `user_id`, `id_sesi_absensi`, `tanggal`, `status_kehadiran`, `status`) VALUES
+(4, 3, 31, '2025-06-12', 'Hadir', 'Hadir'),
+(5, 3, 32, '2025-06-13', 'Izin', 'Hadir'),
+(6, 3, 33, '2025-06-12', 'Hadir', 'Hadir'),
+(7, 3, 34, '2025-06-13', 'Hadir', 'Hadir'),
+(8, 2, 35, '2025-06-12', 'Hadir', 'Hadir'),
+(9, 2, 36, '2025-06-15', 'Hadir', 'Hadir');
 
 -- --------------------------------------------------------
 
@@ -128,7 +141,6 @@ INSERT INTO `anggota` (`id`, `nama`, `nra`, `angkatan`, `user_id`) VALUES
 (702, 'Fatimah Az Zahra', 'F1C022112', 2024, 77),
 (703, 'Baiq Dafina Salsabila', 'A1C02310053', 2022, 78),
 (704, 'Zyasa Dwinta Khaliesta', 'E1B022186', 2023, 79),
-(705, 'Ahmad Reza Mahendra', 'E1A022094', 2024, 80),
 (706, 'Nyoman Aldi Pradipta', 'A1B02310179', 2022, 81),
 (707, 'Adelia Anatia Safitri', 'D1A02310089', 2023, 82),
 (708, 'Ni Nyoman Ayu Mega Lestari', 'C1G022125', 2024, 83),
@@ -220,7 +232,7 @@ INSERT INTO `anggota_minat_bakat` (`id`, `id_anggota`, `id_minat_bakat`) VALUES
 (49, 652, 1),
 (50, 652, 2),
 (51, 654, 3),
-(52, 654, 4),
+(52, 654, 3),
 (53, 655, 4),
 (54, 655, 1),
 (55, 656, 1),
@@ -317,8 +329,6 @@ INSERT INTO `anggota_minat_bakat` (`id`, `id_anggota`, `id_minat_bakat`) VALUES
 (146, 703, 2),
 (147, 704, 1),
 (148, 704, 2),
-(149, 705, 2),
-(150, 705, 3),
 (151, 706, 3),
 (152, 706, 4),
 (153, 707, 4),
@@ -393,12 +403,16 @@ INSERT INTO `bidang` (`id_bidang`, `nama_bidang`, `kepala_bidang`, `wakil_kepala
 --
 
 CREATE TABLE `book_talent` (
-  `id` int(11) NOT NULL,
+  `id_book` int(11) NOT NULL,
+  `nama_client` varchar(100) NOT NULL,
+  `email` varchar(100) NOT NULL,
+  `nama_kegiatan` varchar(100) NOT NULL,
   `jenis_talent` varchar(50) NOT NULL,
-  `jumlah_talent` int(10) NOT NULL,
+  `jumlah_talent` int(11) NOT NULL,
   `tanggal_acara` date NOT NULL,
-  `lokasi-acara` varchar(100) NOT NULL,
-  `durasi_acara` int(10) NOT NULL
+  `lokasi` varchar(100) NOT NULL,
+  `durasi` int(11) NOT NULL,
+  `waktu_submit` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -423,8 +437,9 @@ INSERT INTO `evaluasi` (`id`, `user_id`, `umpan_balik`, `created_at`, `updated_a
 (2, 644, 'anjay', '2025-06-03 10:36:52', '2025-06-03 14:58:15'),
 (4, 652, 'cfksDn[ jf[oc0', '2025-06-03 10:49:04', '2025-06-03 11:34:01'),
 (5, 700, 'nACN?JLB jlDBvjls FNcelKFbKEF', '2025-06-03 14:50:22', NULL),
-(11, 628, 'aku sudah lelah', '2025-06-07 04:07:14', '2025-06-07 04:07:28'),
-(12, 630, 'znv djowa\'M', '2025-06-08 05:42:23', NULL);
+(11, 628, '', '2025-06-07 04:07:14', '2025-06-13 09:51:14'),
+(12, 630, 'znv djowa\'M', '2025-06-08 05:42:23', NULL),
+(13, 632, 'aFWKChn akw\"qwi', '2025-06-10 02:54:14', NULL);
 
 -- --------------------------------------------------------
 
@@ -528,14 +543,14 @@ CREATE TABLE `materi_latihan` (
 --
 
 INSERT INTO `materi_latihan` (`id`, `bidang_minat`, `minggu`, `deskripsi`, `materi`, `link_materi`) VALUES
-(1, 'Tari Tradisional', 1, NULL, 'Gerakan dasar tari Jawa', NULL),
 (2, 'Modern Dance', 1, NULL, 'Teknik freestyle dan ritme', NULL),
 (3, 'Kontemporer', 1, NULL, 'Eksplorasi gerak tubuh', NULL),
 (4, 'Requested', 1, NULL, 'Koreografi sesuai permintaan', NULL),
 (5, 'Tari Tradisional', 1, NULL, 'Gerakan dasar tari Jawa', 'https://youtu.be/example1'),
 (6, 'Modern Dance', 1, NULL, 'Teknik freestyle dan ritme', 'https://drive.google.com/example2'),
 (7, 'Kontemporer', 1, NULL, 'Eksplorasi gerak tubuh', 'https://docs.google.com/example3'),
-(8, 'Requested', 1, NULL, 'Koreografi sesuai permintaan', NULL);
+(8, 'Requested', 1, NULL, 'Koreografi sesuai permintaan', NULL),
+(9, 'Tari Tradisional', 1, 'sjfn;eajsbgiajewg', 'apa ndk tau', 'https://youtu.be/Q-biM51cN6I?si=a7S3mA_XsZ6IBGoZ');
 
 -- --------------------------------------------------------
 
@@ -584,6 +599,51 @@ CREATE TABLE `partisipasi` (
 -- --------------------------------------------------------
 
 --
+-- Struktur dari tabel `pendaftaran`
+--
+
+CREATE TABLE `pendaftaran` (
+  `id` int(11) NOT NULL,
+  `nama` varchar(100) NOT NULL,
+  `no_hp` varchar(20) NOT NULL,
+  `jurusan` varchar(100) NOT NULL,
+  `nim` varchar(30) NOT NULL,
+  `minat_bakat` varchar(100) NOT NULL,
+  `waktu_daftar` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data untuk tabel `pendaftaran`
+--
+
+INSERT INTO `pendaftaran` (`id`, `nama`, `no_hp`, `jurusan`, `nim`, `minat_bakat`, `waktu_daftar`) VALUES
+(1, 'baiq altania dinda eka putri', '08787676545', 'teknik informatika', 'f1d0218888888', 'Modern Dance', '2025-06-13 09:38:31'),
+(2, 'nela', '08787676545', 'teknik informatika', 'f1d0218888888', 'Tari Tradisional', '2025-06-13 09:39:41');
+
+-- --------------------------------------------------------
+
+--
+-- Struktur dari tabel `pengumuman`
+--
+
+CREATE TABLE `pengumuman` (
+  `id` int(11) NOT NULL,
+  `isi` text NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data untuk tabel `pengumuman`
+--
+
+INSERT INTO `pengumuman` (`id`, `isi`) VALUES
+(2, 'PERHATIAN: anggota minat bakat band untuk menghadiri seleksi band senbud dalam rangka perilisan album baru ukmu seni dan budaya'),
+(3, 'asu'),
+(4, 'jadi begini ya begituyaudah begtiu dah'),
+(5, 'bjk');
+
+-- --------------------------------------------------------
+
+--
 -- Struktur dari tabel `pengurus`
 --
 
@@ -601,11 +661,60 @@ CREATE TABLE `pengurus` (
 --
 
 INSERT INTO `pengurus` (`id_pengurus`, `nama_pengurus`, `nim`, `angkatan`, `jabatan`, `kontak`) VALUES
-(1, 'Andi Wijaya', '2001234567', 2020, 'Ketua', 2147483647),
+(1, 'Andi Wijaya', '999', 2020, 'Ketua', 2147483647),
 (2, 'Budi Santoso', '2002234568', 2021, 'Wakil Ketua', 2147483647),
 (3, 'Citra Dewi', '2003234569', 2022, 'Sekretaris', 2147483647),
 (4, 'Dewi Lestari', '2004234570', 2023, 'Bendahara', 2147483647),
 (5, 'adelia', 'f1d02310006', 2023, 'wakil kepala bidang gerak', 818987);
+
+-- --------------------------------------------------------
+
+--
+-- Struktur dari tabel `penyewaan`
+--
+
+CREATE TABLE `penyewaan` (
+  `id_penyewaan` int(11) NOT NULL,
+  `nama` varchar(100) NOT NULL,
+  `email` varchar(100) NOT NULL,
+  `nama_kegiatan` varchar(100) NOT NULL,
+  `telepon` varchar(30) NOT NULL,
+  `item` varchar(100) NOT NULL,
+  `tanggal` date NOT NULL,
+  `durasi` int(11) NOT NULL,
+  `waktu_submit` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data untuk tabel `penyewaan`
+--
+
+INSERT INTO `penyewaan` (`id_penyewaan`, `nama`, `email`, `nama_kegiatan`, `telepon`, `item`, `tanggal`, `durasi`, `waktu_submit`) VALUES
+(1, 'adel', 'baiqdelia02@gmail.com', 'resepsi', '087861530994', 'properti_tari', '2025-06-21', 2, '2025-06-13 09:05:22');
+
+-- --------------------------------------------------------
+
+--
+-- Struktur dari tabel `portofolio`
+--
+
+CREATE TABLE `portofolio` (
+  `id_portofolio` int(11) NOT NULL,
+  `judul` varchar(100) NOT NULL,
+  `deskripsi` text DEFAULT NULL,
+  `link` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data untuk tabel `portofolio`
+--
+
+INSERT INTO `portofolio` (`id_portofolio`, `judul`, `deskripsi`, `link`) VALUES
+(1, 'Penampilan Tari Kreasi Wonderlandddd', 'Penampilan tari Saman oleh 17 penari Sanggar Birama pada acara NIGHT WITH SENBUD', 'https://www.youtube.com/embed/ExvZZSnNfus?si=QIpSW4X0I35xCN5-'),
+(2, 'Bajidor Kahot', 'PENAMPILAN TARI BAJIDOR KAHOT YANG PERNAH DITAMPILKAN DI ACARA NASIONAL UNIVERSITAS MATARAM.', 'https://www.youtube.com/embed/Jsra3dmpxL8?si=XFzmPRHl0F3MS1Gf'),
+(3, 'Dance dalam kegiatan Night with Senbud', 'Tim modern dance Sanggar Birama berhasil menampilkan penampilan terbaik dalam kegiatan Night with Senbud.', 'https://www.youtube.com/embed/975NucnQTXY?si=FB5Y82kCDBvEqK7_'),
+(4, 'MEGA crew', 'Mega crew dance persembahan sanggar BIRAMA.', 'https://www.youtube.com/embed/o1g1qpeh834?si=4MpFkOvDvmu4QoXo'),
+(5, 'video gogo rancah', 'video garapan anggota ukmu seni budaya \"Alief Shota\" yg mengangkat budaya daerah ntb', 'https://www.youtube.com/embed/EDPvyqzq9iY?si=n1cIaPOnEOLtrvVm');
 
 -- --------------------------------------------------------
 
@@ -631,10 +740,11 @@ CREATE TABLE `program_kerja` (
 
 INSERT INTO `program_kerja` (`id`, `nama_program`, `tanggal_mulai`, `tanggal_selesai`, `deskripsi`, `pj_pengurus`, `ketua_panitia`, `status`, `tanggal_selesai_agenda`) VALUES
 (1, 'Pelatihan Dasar', '2024-07-01', '2024-07-05', 'Pelatihan dasar untuk anggota baru.', 1, 720, 'Perencanaan', '0000-00-00'),
-(2, 'Festival Seni', '2024-08-10', '2024-08-12', 'Festival seni tahunan.', 2, NULL, 'Perencanaan', NULL),
+(2, 'Festival Seni', '2024-08-10', '2024-08-12', 'Festival seni tahunan.', 2, 727, 'Perencanaan', '0000-00-00'),
 (3, 'Pengabdian Masyarakat', '2024-09-01', '2024-09-03', 'Kegiatan sosial di desa binaan.', 3, NULL, 'Perencanaan', NULL),
 (4, 'Workshop Musik', '2024-10-15', '2024-10-16', 'Workshop musik bersama mentor nasional.', 4, NULL, 'Perencanaan', NULL),
-(5, 'Lomba Tari', '2024-11-20', '2024-11-21', 'Lomba tari antar sekolah.', 5, NULL, 'Perencanaan', NULL);
+(5, 'Lomba Tari', '2024-11-20', '2024-11-21', 'Lomba tari antar sekolah.', 5, NULL, 'Perencanaan', NULL),
+(6, 'bersih bersih sekret', '2025-02-02', '2025-12-12', 'berish bersih dah', 4, 640, 'berjalan', '2025-12-31');
 
 -- --------------------------------------------------------
 
@@ -668,6 +778,9 @@ INSERT INTO `progress_proker` (`id`, `id_program`, `laporan`, `tanggal_update`) 
 
 CREATE TABLE `sesi_absensi` (
   `id` int(11) NOT NULL,
+  `id_jadwal` int(11) DEFAULT NULL,
+  `nama_sesi` varchar(100) DEFAULT NULL,
+  `tanggal` date DEFAULT NULL,
   `status` enum('dibuka','ditutup') NOT NULL DEFAULT 'ditutup'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -675,8 +788,13 @@ CREATE TABLE `sesi_absensi` (
 -- Dumping data untuk tabel `sesi_absensi`
 --
 
-INSERT INTO `sesi_absensi` (`id`, `status`) VALUES
-(1, 'ditutup');
+INSERT INTO `sesi_absensi` (`id`, `id_jadwal`, `nama_sesi`, `tanggal`, `status`) VALUES
+(31, 8, 'Absensi Rutin', '2025-06-12', 'ditutup'),
+(32, 8, 'Absensi Rutin', '2025-06-13', 'ditutup'),
+(33, 9, 'Absensi Rutin', '2025-06-12', 'ditutup'),
+(34, 9, 'Absensi Rutin', '2025-06-13', 'ditutup'),
+(35, 8, 'Absensi Rutin', '2025-06-12', 'ditutup'),
+(36, 8, 'Absensi Rutin', '2025-06-15', 'ditutup');
 
 -- --------------------------------------------------------
 
@@ -712,8 +830,10 @@ CREATE TABLE `talent` (
 --
 
 INSERT INTO `talent` (`id_talent`, `jenis_talent`, `keterangan`) VALUES
-(1, 'Penari Tradisional ', 'Penari yang menampilkan tarian tradisional khas daerah.'),
-(2, 'modern dance', 'penari hip hop dengan musik modern dan beat cepat');
+(1, 'tim tari bajidor kahot', 'Penari yang menampilkan tarian tradisional khas daerah jawa bali bajidor kahot, dengan beberapa varian jumlah penari yang dapat di sesuaikan dengan kebutuhan anda'),
+(2, 'modern dance', 'penari hip hop dengan musik modern dan beat cepat'),
+(3, 'band birama satu', 'band birama dengan susunan: gitar, bass, keyboard, vocal, drum'),
+(4, 'vocal solo', 'penyanyi laki-laki atau perempuan yang siap di minta nyanyi lagu apapun');
 
 -- --------------------------------------------------------
 
@@ -1238,7 +1358,7 @@ ALTER TABLE `bidang`
 -- Indeks untuk tabel `book_talent`
 --
 ALTER TABLE `book_talent`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id_book`);
 
 --
 -- Indeks untuk tabel `evaluasi`
@@ -1289,10 +1409,34 @@ ALTER TABLE `partisipasi`
   ADD KEY `user_id` (`user_id`);
 
 --
+-- Indeks untuk tabel `pendaftaran`
+--
+ALTER TABLE `pendaftaran`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indeks untuk tabel `pengumuman`
+--
+ALTER TABLE `pengumuman`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indeks untuk tabel `pengurus`
 --
 ALTER TABLE `pengurus`
   ADD PRIMARY KEY (`id_pengurus`);
+
+--
+-- Indeks untuk tabel `penyewaan`
+--
+ALTER TABLE `penyewaan`
+  ADD PRIMARY KEY (`id_penyewaan`);
+
+--
+-- Indeks untuk tabel `portofolio`
+--
+ALTER TABLE `portofolio`
+  ADD PRIMARY KEY (`id_portofolio`);
 
 --
 -- Indeks untuk tabel `program_kerja`
@@ -1341,7 +1485,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT untuk tabel `absensi`
 --
 ALTER TABLE `absensi`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT untuk tabel `anggota`
@@ -1365,13 +1509,13 @@ ALTER TABLE `bidang`
 -- AUTO_INCREMENT untuk tabel `book_talent`
 --
 ALTER TABLE `book_talent`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_book` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT untuk tabel `evaluasi`
 --
 ALTER TABLE `evaluasi`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT untuk tabel `inventaris`
@@ -1395,7 +1539,7 @@ ALTER TABLE `jadwal_rutin`
 -- AUTO_INCREMENT untuk tabel `materi_latihan`
 --
 ALTER TABLE `materi_latihan`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT untuk tabel `minat_bakat`
@@ -1410,16 +1554,40 @@ ALTER TABLE `partisipasi`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT untuk tabel `pendaftaran`
+--
+ALTER TABLE `pendaftaran`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT untuk tabel `pengumuman`
+--
+ALTER TABLE `pengumuman`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
 -- AUTO_INCREMENT untuk tabel `pengurus`
 --
 ALTER TABLE `pengurus`
   MODIFY `id_pengurus` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
+-- AUTO_INCREMENT untuk tabel `penyewaan`
+--
+ALTER TABLE `penyewaan`
+  MODIFY `id_penyewaan` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT untuk tabel `portofolio`
+--
+ALTER TABLE `portofolio`
+  MODIFY `id_portofolio` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
 -- AUTO_INCREMENT untuk tabel `program_kerja`
 --
 ALTER TABLE `program_kerja`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT untuk tabel `progress_proker`
@@ -1431,7 +1599,7 @@ ALTER TABLE `progress_proker`
 -- AUTO_INCREMENT untuk tabel `sesi_absensi`
 --
 ALTER TABLE `sesi_absensi`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=37;
 
 --
 -- AUTO_INCREMENT untuk tabel `sewa_barang`
@@ -1443,7 +1611,7 @@ ALTER TABLE `sewa_barang`
 -- AUTO_INCREMENT untuk tabel `talent`
 --
 ALTER TABLE `talent`
-  MODIFY `id_talent` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id_talent` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT untuk tabel `users`
