@@ -1,64 +1,51 @@
+<?php
+session_start();
+require_once __DIR__ . '/../config/config.php';
+
+$is_pengurus = isset($_SESSION["user"]["role"]) && $_SESSION["user"]["role"] === "pengurus";
+$portofolio = $mysqli->query("SELECT * FROM portofolio ORDER BY id_portofolio DESC");
+?>
+
 <?php include 'header.php'; ?>
 
 <div class="content">
     <h1>Portofolio Sanggar Birama</h1>
     <p>Berikut adalah beberapa penampilan dan karya terbaik dari Sanggar Birama.</p>
-    
-    <h2>Tari Tradisional dan Kreasi</h2>
-    
-    <div class="video-row">
-        <div class="video-container">
-            <h3>Penampilan Tari Kreasi Wonderland</h3>
-            <p>Penampilan tari Saman oleh 17 penari Sanggar Birama pada acara NIGHT WITH SENBUD</p>
-            <iframe 
-                src="https://www.youtube.com/embed/ExvZZSnNfus?si=QIpSW4X0I35xCN5-" 
-                title="Tari Wonderland" 
-                frameborder="0" 
-                allow="autoplay; clipboard-write; gyroscope; picture-in-picture; web-share" 
-                allowfullscreen>
-            </iframe>
-        </div>
-        
-        <div class="video-container">
-            <h3>Bajidor Kahot</h3>
-            <p>PENAMPILAN TARI BAJIDOR KAHOT YANG PERNAH DITAMPILKAN DI ACARA NASIONAL UNIVERSITAS MATARAM.</p>
-            <iframe 
-                src="https://www.youtube.com/embed/Jsra3dmpxL8?si=XFzmPRHl0F3MS1Gf" 
-                title="Bajidor Kahot" 
-                frameborder="0" 
-                allow="autoplay; clipboard-write; gyroscope; picture-in-picture; web-share" 
-                allowfullscreen>
-            </iframe>
-        </div>
-    </div>
-    
-    <h2>Penampilan Modern Dance</h2>
-    
-    <div class="video-row">
-        <div class="video-container">
-            <h3>Dance dalam kegiatan Night with Senbud</h3>
-            <p>Tim modern dance Sanggar Birama berhasil menampilkan penampilan terbaik dalam kegiatan Night with Senbud.</p>
-            <iframe 
-                src="https://www.youtube.com/embed/975NucnQTXY?si=FB5Y82kCDBvEqK7_" 
-                title="Modern Dance" 
-                frameborder="0" 
-                allow="autoplay; clipboard-write; gyroscope; picture-in-picture; web-share" 
-                allowfullscreen>
-            </iframe>
-        </div>
-        
-        <div class="video-container">
-            <h3>MEGA crew</h3>
-            <p>Mega crew dance persembahan sanggar BIRAMA.</p>
-            <iframe 
-                src="https://www.youtube.com/embed/o1g1qpeh834?si=4MpFkOvDvmu4QoXo" 
-                title="Mega Crew" 
-                frameborder="0" 
-                allow="autoplay; clipboard-write; gyroscope; picture-in-picture; web-share" 
-                allowfullscreen>
-            </iframe>
-        </div>
-    </div>
+
+    <?php if ($is_pengurus): ?>
+        <table style="width:100%; border-collapse:collapse;">
+            <tr>
+                <th>Portofolio</th>
+                <th style="width:180px;">Aksi</th>
+            </tr>
+            <?php while($row = $portofolio->fetch_assoc()): ?>
+            <tr>
+                <td>
+                    <b><?= htmlspecialchars($row['judul']) ?></b><br>
+                    <?= nl2br(htmlspecialchars($row['deskripsi'])) ?><br>
+                    <iframe src="<?= htmlspecialchars($row['link']) ?>" width="320" height="180" allowfullscreen></iframe>
+                </td>
+                <td>
+                    <a href="edit_portofolio.php?id=<?= $row['id_portofolio'] ?>" class="button">Edit</a>
+                    <a href="hapus_portofolio.php?id=<?= $row['id_portofolio'] ?>" class="button" onclick="return confirm('Hapus portofolio ini?')">Hapus</a>
+                </td>
+            </tr>
+            <?php endwhile; ?>
+            <tr>
+                <td colspan="2" style="text-align:center;">
+                    <a href="tambah_portofolio.php" class="button">Tambah Portofolio</a>
+                </td>
+            </tr>
+        </table>
+    <?php else: ?>
+        <?php $portofolio->data_seek(0); while($row = $portofolio->fetch_assoc()): ?>
+            <div class="video-container">
+                <h3><?= htmlspecialchars($row['judul']) ?></h3>
+                <p><?= nl2br(htmlspecialchars($row['deskripsi'])) ?></p>
+                <iframe src="<?= htmlspecialchars($row['link']) ?>" width="320" height="180" allowfullscreen></iframe>
+            </div>
+        <?php endwhile; ?>
+    <?php endif; ?>
 
     <a href="beranda.php">Kembali ke Halaman Utama</a>
 </div>

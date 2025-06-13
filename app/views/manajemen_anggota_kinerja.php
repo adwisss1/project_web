@@ -125,7 +125,9 @@ function getEvaluasiAnggota($mysqli, $anggota_id) {
 
 <?php include __DIR__ . '/header.php'; ?>
 
-<a href="beranda_pengurus.php">Kembali ke Beranda Pengurus</a>
+<a href="beranda_pengurus.php" class="button">Kembali ke Beranda Pengurus</a>
+<a href="rekap_pendaftar.php" class="button">Lihat Rekap Pendaftar</a>
+
 <h2>Manajemen Anggota</h2>
 
 <!-- Form Filter -->

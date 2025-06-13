@@ -1,3 +1,19 @@
+a.button {
+    display: inline-block;
+    padding: 8px 18px;
+    background: #b00;
+    color: #fff !important;
+    border-radius: 4px;
+    text-decoration: none;
+    border: none;
+    font-weight: bold;
+    cursor: pointer;
+    margin-right: 8px;
+    transition: background 0.2s;
+}
+a.button:hover {
+    background: #900;
+}
 /* Styling untuk halaman beranda */
 body {
     margin: 0;
@@ -22,11 +38,11 @@ header h1 {
 }
 
 .content {
-    max-width: 900px;
-    margin: 20px auto;
+    max-width: 1200px;
+    margin: 30px auto;
     padding: 20px;
     background: rgba(255, 255, 255, 0.9);
-    border-radius: 12px;
+    border-radius: 15px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     color: #333;
 }
@@ -276,13 +292,13 @@ footer {
 
 /* Styling untuk halaman portofolio */
 .content {
-    background: rgba(255, 255, 255, 0.7); /* Latar belakang putih transparan */
-    padding: 20px; /* Memberikan jarak di dalam konten */
-    border-radius: 12px; /* Membuat sudut melengkung */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Memberikan bayangan */
-    max-width: 900px; /* Membatasi lebar konten */
-    margin: 20px auto; /* Memusatkan konten */
-    font-family: Arial, sans-serif; /* Font default */
+    background: rgba(255,255,255,0.7);
+    padding: 32px;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    max-width: 1400px;
+    width: 96vw;
+    margin: 20px auto;
 }
 
 .content h1 {

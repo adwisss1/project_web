@@ -42,7 +42,8 @@ $materi_result = $stmt->get_result();
 
 <div class="content">
     <h2>Selamat datang, <?= htmlspecialchars($_SESSION["user"]["username"]); ?>!</h2>
-
+    <!-- Tombol kembali ke halaman beranda -->
+    <a href="beranda.php" class="button" style="margin-bottom:18px;display:inline-block;">&larr; Kembali ke Halaman Beranda</a>
     <h3>Daftar Pengurus</h3>
     <table border="1">
         <tr>
@@ -104,13 +105,86 @@ $materi_result = $stmt->get_result();
         }
         ?>
     </table>
+
+    <!-- Tabel Request Penyewaan Inventaris -->
+    <h3>Daftar Request Penyewaan Inventaris</h3>
+    <table border="1">
+        <tr>
+            <th>No</th>
+            <th>Nama Penyewa</th>
+            <th>Email</th>
+            <th>Nama Kegiatan</th>
+            <th>Telepon</th>
+            <th>Item</th>
+            <th>Tanggal</th>
+            <th>Durasi (hari)</th>
+            <th>Waktu Submit</th>
+        </tr>
+        <?php
+        $no = 1;
+        $result = $mysqli->query("SELECT * FROM penyewaan ORDER BY waktu_submit DESC");
+        while ($row = $result->fetch_assoc()) {
+            echo "<tr>";
+            echo "<td>{$no}</td>";
+            echo "<td>" . htmlspecialchars($row["nama"]) . "</td>";
+            echo "<td>" . htmlspecialchars($row["email"]) . "</td>";
+            echo "<td>" . htmlspecialchars($row["nama_kegiatan"]) . "</td>";
+            echo "<td>" . htmlspecialchars($row["telepon"]) . "</td>";
+            echo "<td>" . htmlspecialchars($row["item"]) . "</td>";
+            echo "<td>" . htmlspecialchars($row["tanggal"]) . "</td>";
+            echo "<td>" . htmlspecialchars($row["durasi"]) . "</td>";
+            echo "<td>" . htmlspecialchars($row["waktu_submit"]) . "</td>";
+            echo "</tr>";
+            $no++;
+        }
+        ?>
+    </table>
+
+    <!-- Tabel Request Book Talent -->
+    <h3>Daftar Request Book Talent</h3>
+    <table border="1">
+        <tr>
+            <th>No</th>
+            <th>Nama Client</th>
+            <th>Email</th>
+            <th>Nama Kegiatan</th>
+            <th>Jenis Talent</th>
+            <th>Jumlah Talent</th>
+            <th>Tanggal Acara</th>
+            <th>Lokasi</th>
+            <th>Durasi (jam)</th>
+            <th>Waktu Submit</th>
+        </tr>
+        <?php
+        $no = 1;
+        $result = $mysqli->query("SELECT * FROM book_talent ORDER BY waktu_submit DESC");
+        while ($row = $result->fetch_assoc()) {
+            echo "<tr>";
+            echo "<td>{$no}</td>";
+            echo "<td>" . htmlspecialchars($row["nama_client"]) . "</td>";
+            echo "<td>" . htmlspecialchars($row["email"]) . "</td>";
+            echo "<td>" . htmlspecialchars($row["nama_kegiatan"]) . "</td>";
+            echo "<td>" . htmlspecialchars($row["jenis_talent"]) . "</td>";
+            echo "<td>" . htmlspecialchars($row["jumlah_talent"]) . "</td>";
+            echo "<td>" . htmlspecialchars($row["tanggal_acara"]) . "</td>";
+            echo "<td>" . htmlspecialchars($row["lokasi"]) . "</td>";
+            echo "<td>" . htmlspecialchars($row["durasi"]) . "</td>";
+            echo "<td>" . htmlspecialchars($row["waktu_submit"]) . "</td>";
+            echo "</tr>";
+            $no++;
+        }
+        
+        ?>
+        
+    </table>
     <h3>Menu Pengurus</h3>
     <ul>
-        <li><a href="manajemen_anggota_kinerja.php">Manajemen & Evaluasi Anggota</a></li>
+        <li><a href="manajemen_anggota_kinerja.php">Manajemen Anggota</a></li>
+        <li><a href="evaluasi_anggota.php">Evaluasi Anggota</a></li>
         <li><a href="manajemen_jadwal.php">Manajemen Jadwal</a></li>
         <li><a href="kontrol_program.php">Kontrol Program Kerja</a></li>
-        <li><a href="evaluasi_anggota.php">Evaluasi Anggota</a></li>
-        <li><a href="manajemen_materi.php">Manajemen Materi Latihan</a></li> 
+        <li><a href="manajemen_materi.php">Manajemen Materi Latihan</a></li>
+        <li><a href="manajemen_talent&inventaris.php">Manajemen Talent dan Inventaris</a></li>  
     </ul>
 
     <br><br>
