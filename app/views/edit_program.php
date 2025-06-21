@@ -1,101 +1,101 @@
 <?php
-
+session_start();
 require_once __DIR__ . '/../config/config.php';
-include __DIR__ . '/header.php';
-
-$id = isset($_GET['id']) ? intval($_GET['id']) : 0;
-if ($id <= 0) {
-    die("ID program tidak valid.");
+if (!isset($_SESSION["user"]) || $_SESSION["user"]["role"] !== "pengurus") {
+    header("Location: ../login.php");
+    exit();
 }
 
-$stmt = $mysqli->prepare("SELECT nama_program, tanggal_mulai, tanggal_selesai, deskripsi, pj_pengurus, ketua_panitia, status, tanggal_selesai_agenda FROM program_kerja WHERE id=?");
-$stmt->bind_param("i", $id);
-$stmt->execute();
-$stmt->bind_result($nama, $mulai, $selesai, $deskripsi, $pj, $ketua, $status, $selesai_agenda);
-$stmt->fetch();
-$stmt->close();
-?>
+// Contoh pengambilan data program kerja
+$id_program = isset($_GET['id']) ? intval($_GET['id']) : 0;
+$error = '';
+$success = '';
+$nama_program = '';
+$deskripsi = '';
 
-<h2>Edit Program Kerja</h2>
-<form method="POST" action="/SI-BIRAMA/app/controllers/update_program.php">
-    <input type="hidden" name="id" value="<?= $id ?>">
-    Nama Program: <input type="text" name="nama_program" value="<?= htmlspecialchars($nama) ?>" required><br>
-    Tanggal Mulai: <input type="date" name="tanggal_mulai" value="<?= htmlspecialchars($mulai) ?>" required><br>
-    Tanggal Selesai: <input type="date" name="tanggal_selesai" value="<?= htmlspecialchars($selesai) ?>" required><br>
-    Tanggal Selesai Agenda: <input type="date" name="tanggal_selesai_agenda" value="<?= htmlspecialchars($selesai_agenda) ?>"><br>
-    Deskripsi: <textarea name="deskripsi"><?= htmlspecialchars($deskripsi) ?></textarea><br>
-    PJ Pengurus: 
-    <select name="pj_pengurus" required>
-        <option value="">-- Pilih Pengurus --</option>
-        <?php
-        $pengurus_result = $mysqli->query("SELECT id_pengurus, nama_pengurus FROM pengurus");
-        while ($pengurus = $pengurus_result->fetch_assoc()) {
-            $selected = ($pengurus['id_pengurus'] == $pj) ? 'selected' : '';
-            echo '<option value="'.$pengurus['id_pengurus'].'" '.$selected.'>'.htmlspecialchars($pengurus['nama_pengurus']).'</option>';
-        }
-        ?>
-    </select><br>
-    Ketua Panitia: 
-    <input type="hidden" name="ketua_panitia" id="ketua_panitia" value="<?= htmlspecialchars($ketua) ?>">
-    <input type="text" id="nama_ketua_panitia" value="<?php
-        // Ambil nama anggota jika ada id
-        $nama_ketua = '';
-        if ($ketua) {
-            $anggota = $mysqli->query("SELECT nama FROM anggota WHERE id = ".intval($ketua));
-            if ($anggota && $row = $anggota->fetch_assoc()) {
-                $nama_ketua = $row['nama'];
-            }
-        }
-        echo htmlspecialchars($nama_ketua);
-    ?>" readonly>
-    <button type="button" onclick="openCariKetua()">Cari</button><br>
-    Status: <input type="text" name="status" value="<?= htmlspecialchars($status) ?>"><br>
-    <button type="submit">Simpan</button>
-</form>
-<a href="kontrol_program.php">Kembali</a>
+if ($id_program) {
+    $stmt = $mysqli->prepare("SELECT nama_program, deskripsi FROM program_kerja WHERE id=?");
+    $stmt->bind_param("i", $id_program);
+    $stmt->execute();
+    $stmt->bind_result($nama_program, $deskripsi);
+    $stmt->fetch();
+    $stmt->close();
+    if (!$nama_program) {
+        $error = "Program tidak ditemukan.";
+    }
+} else {
+    $error = "ID program tidak ditemukan.";
+}
 
-<!-- Modal cari anggota -->
-<div id="modalCariKetua" style="display:none; position:fixed; left:0; top:0; width:100vw; height:100vh; background:rgba(0,0,0,0.3); z-index:1000;">
-    <div style="background:#fff; margin:50px auto; padding:20px; width:400px; max-height:80vh; overflow:auto; border-radius:8px; position:relative;">
-        <h3>Pilih Ketua Panitia</h3>
-        <input type="text" id="searchAnggota" placeholder="Cari nama anggota..." onkeyup="filterAnggota()">
-        <ul id="listAnggota" style="list-style:none; padding:0; max-height:300px; overflow:auto;">
-            <?php
-            $anggota_result = $mysqli->query("SELECT id, nama FROM anggota");
-            while ($anggota = $anggota_result->fetch_assoc()) {
-                echo '<li><a href="#" onclick="pilihKetua('.$anggota['id'].', \''.htmlspecialchars($anggota['nama'], ENT_QUOTES).'\');return false;">'.htmlspecialchars($anggota['nama']).'</a></li>';
-            }
-            ?>
-        </ul>
-        <button onclick="closeCariKetua()">Tutup</button>
-    </div>
-</div>
-
-<script>
-function openCariKetua() {
-    document.getElementById('modalCariKetua').style.display = 'block';
-}
-function closeCariKetua() {
-    document.getElementById('modalCariKetua').style.display = 'none';
-}
-function pilihKetua(id, nama) {
-    document.getElementById('ketua_panitia').value = id;
-    document.getElementById('nama_ketua_panitia').value = nama;
-    closeCariKetua();
-}
-function filterAnggota() {
-    var input = document.getElementById('searchAnggota').value.toLowerCase();
-    var ul = document.getElementById('listAnggota');
-    var lis = ul.getElementsByTagName('li');
-    for (var i = 0; i < lis.length; i++) {
-        var a = lis[i].getElementsByTagName('a')[0];
-        if (a.innerHTML.toLowerCase().indexOf(input) > -1) {
-            lis[i].style.display = "";
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && $id_program) {
+    $nama_program = trim($_POST['nama_program']);
+    $deskripsi = trim($_POST['deskripsi']);
+    if ($nama_program === '' || $deskripsi === '') {
+        $error = "Semua field wajib diisi.";
+    } else {
+        $stmt = $mysqli->prepare("UPDATE program_kerja SET nama_program=?, deskripsi=? WHERE id=?");
+        $stmt->bind_param("ssi", $nama_program, $deskripsi, $id_program);
+        if ($stmt->execute()) {
+            $success = "Program berhasil diupdate.";
+            header("Location: kontrol_program.php");
+            exit();
         } else {
-            lis[i].style.display = "none";
+            $error = "Gagal mengupdate program.";
         }
+        $stmt->close();
     }
 }
-</script>
-
-<?php include __DIR__ . '/footer.php'; ?>
+?>
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Program Kerja</title>
+    <link rel="stylesheet" href="/SI-BIRAMA/public/css/style.css">
+</head>
+<body>
+<div class="layout-wrapper">
+    <!-- Sidebar -->
+    <nav class="sidebar-custom">
+        <div class="sidebar-header">
+            <img src="/SI-BIRAMA/public/images/logo_noback.jpg" alt="Logo" class="logo-sidebar" width="100">
+        </div>
+        <ul>
+            <li><a href="beranda_pengurus.php">Dashboard</a></li>
+            <li><a href="manajemen_anggota_kinerja.php">Manajemen Anggota</a></li>
+            <li><a href="evaluasi_anggota.php">Evaluasi Anggota</a></li>
+            <li><a href="manajemen_jadwal.php">Manajemen Jadwal</a></li>
+            <li><a href="kontrol_program.php">Kontrol Program Kerja</a></li>
+            <li><a href="manajemen_materi.php">Materi Latihan</a></li>
+            <li><a href="manajemen_talent&inventaris.php">Talent & Inventaris</a></li>
+            <li><a href="/SI-BIRAMA/app/controllers/authController.php?logout=true" class="text-danger">Logout</a></li>
+        </ul>
+    </nav>
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="content">
+            <h2>Edit Program Kerja</h2>
+            <?php if ($error): ?>
+                <div style="color:red;"><?= htmlspecialchars($error) ?></div>
+            <?php endif; ?>
+            <?php if ($success): ?>
+                <div style="color:green;"><?= htmlspecialchars($success) ?></div>
+            <?php endif; ?>
+            <?php if ($id_program && !$error): ?>
+            <form method="post" class="form-warna"  >
+                <label>Nama Program:
+                    <input type="text" name="nama_program" value="<?= htmlspecialchars($nama_program) ?>" required>
+                </label><br>
+                <label>Deskripsi:
+                    <textarea name="deskripsi" required><?= htmlspecialchars($deskripsi) ?></textarea>
+                </label><br>
+                <button type="submit" class="button">Simpan Perubahan</button>
+                <button type="button" class="button" onclick="window.location.href='kontrol_program.php'">Kembali</button>
+            </form>
+            <?php endif; ?>
+        </div>
+    </div>
+</div>
+<?php include 'footer.php'; ?>
+</body>
+</html>

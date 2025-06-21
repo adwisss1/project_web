@@ -1,7 +1,6 @@
 <?php
-// filepath: d:\dari c\2Xampp\instal\htdocs\SI-BIRAMA\app\views\edit_pengurus.php
 require_once __DIR__ . '/../config/config.php';
-include __DIR__ . '/header.php';
+session_start();
 
 $id_pengurus = isset($_GET['id_pengurus']) ? intval($_GET['id_pengurus']) : 0;
 if ($id_pengurus <= 0) {
@@ -18,21 +17,50 @@ $stmt->close();
 
 if (!$nama_pengurus) {
     echo "Data pengurus tidak ditemukan.";
-    include __DIR__ . '/footer.php';
     exit();
 }
 ?>
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Edit Pengurus</title>
+  <link rel="stylesheet" href="/SI-BIRAMA/public/css/style.css">
+</head>
+<body>
+  <div class="layout-wrapper">
+    <?php include 'sidebar_pengurus.html'; ?>
+    <div class="main-content">
+      <div class="content">
+        <h2>Edit Data Pengurus</h2>
+        <form method="POST" action="/SI-BIRAMA/app/controllers/update_pengurus.php" class="form-container">
+          <input type="hidden" name="id_pengurus" value="<?= $id_pengurus ?>">
 
-<h2>Edit Data Pengurus</h2>
-<form method="POST" action="/SI-BIRAMA/app/controllers/update_pengurus.php">
-    <input type="hidden" name="id_pengurus" value="<?= $id_pengurus ?>">
-    Nama Pengurus: <input type="text" name="nama_pengurus" value="<?= htmlspecialchars($nama_pengurus) ?>" required><br>
-    NIM: <input type="text" name="nim" value="<?= htmlspecialchars($nim) ?>" required><br>
-    Angkatan: <input type="number" name="angkatan" value="<?= htmlspecialchars($angkatan) ?>" required><br>
-    Jabatan: <input type="text" name="jabatan" value="<?= htmlspecialchars($jabatan) ?>" required><br>
-    Kontak: <input type="text" name="kontak" value="<?= htmlspecialchars($kontak) ?>" required><br>
-    <button type="submit">Simpan Perubahan</button>
-</form>
-<a href="manajemen_pengurus.php">Kembali</a>
+          <label for="nama_pengurus">Nama Pengurus:</label>
+          <input type="text" name="nama_pengurus" id="nama_pengurus" value="<?= htmlspecialchars($nama_pengurus) ?>" required>
 
-<?php include __DIR__ . '/footer.php'; ?>
+          <label for="nim">NIM:</label>
+          <input type="text" name="nim" id="nim" value="<?= htmlspecialchars($nim) ?>" required>
+
+          <label for="angkatan">Angkatan:</label>
+          <input type="number" name="angkatan" id="angkatan" value="<?= htmlspecialchars($angkatan) ?>" required>
+
+          <label for="jabatan">Jabatan:</label>
+          <input type="text" name="jabatan" id="jabatan" value="<?= htmlspecialchars($jabatan) ?>" required>
+
+          <label for="kontak">Kontak:</label>
+          <input type="text" name="kontak" id="kontak" value="<?= htmlspecialchars($kontak) ?>" required>
+
+          <div 
+            <form method="post">
+                <button type="submit" class="button">Simpan Perubahan</button>
+            </form>
+            <button type="button" class="button" onclick="window.location.href='manajemen_pengurus.php'">Batal</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <?php include 'footer.php'; ?>
+</body>
+</html>

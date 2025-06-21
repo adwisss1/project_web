@@ -1,5 +1,4 @@
 <?php
-// filepath: d:\dari c\2Xampp\instal\htdocs\SI-BIRAMA\app\views\manajemen_Talent&inventaris.php
 session_start();
 require_once __DIR__ . '/../config/config.php';
 
@@ -13,61 +12,74 @@ if (!isset($_SESSION["user"]["role"]) || $_SESSION["user"]["role"] !== "pengurus
 $talent = $mysqli->query("SELECT * FROM talent");
 $inventaris = $mysqli->query("SELECT * FROM inventaris");
 ?>
-<?php include 'header.php'; ?>
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Manajemen Talent & Inventaris</title>
+  <link rel="stylesheet" href="/SI-BIRAMA/public/css/style.css">
+</head>
+<body>
+  <div class="layout-wrapper">
+    <?php include 'sidebar_pengurus.html'; ?>
+    <div class="main-content">
+      <div class="content">
+        <h2>Manajemen Talent</h2>
+        <a href="beranda_pengurus.php" class="button" style="margin-bottom:18px;display:inline-block;">← Kembali ke Halaman Pengurus</a>
 
-<div class="content">
-    <a href="beranda_pengurus.php" class="button" style="margin-bottom:18px;display:inline-block;">&larr; Kembali ke Halaman Pengurus</a>
-    <h2>Manajemen Talent</h2>
-    <table border="1" style="width:100%; border-collapse:collapse;">
-        <tr>
+        <table class="custom-table">
+          <tr>
             <th>No</th>
             <th>Jenis Talent</th>
             <th>Keterangan</th>
-            <th style="width:160px;">Aksi</th>
-        </tr>
-        <?php $no=1; while($row = $talent->fetch_assoc()): ?>
-        <tr>
+            <th>Aksi</th>
+          </tr>
+          <?php $no=1; while($row = $talent->fetch_assoc()): ?>
+          <tr>
             <td><?= $no++ ?></td>
             <td><?= htmlspecialchars($row['jenis_talent']) ?></td>
             <td><?= htmlspecialchars($row['keterangan']) ?></td>
             <td>
-                <a href="edit_talent.php?id=<?= $row['id_talent'] ?>" class="button">Edit</a>
-                <a href="hapus_talent.php?id=<?= $row['id_talent'] ?>" class="button" onclick="return confirm('Hapus talent ini?')">Hapus</a>
+              <a href="edit_talent.php?id=<?= $row['id_talent'] ?>" class="link-button">Edit</a>
+              <a href="hapus_talent.php?id=<?= $row['id_talent'] ?>" class="link-button text-danger" onclick="return confirm('Hapus talent ini?')">Hapus</a>
             </td>
-        </tr>
-        <?php endwhile; ?>
-        <tr>
+          </tr>
+          <?php endwhile; ?>
+          <tr>
             <td colspan="4" style="text-align:center;">
-                <a href="tambah_talent.php" class="button">Tambah Talent</a>
+              <a href="tambah_talent.php" class="button" style="background:#007bff;">+ Tambah Talent</a>
             </td>
-        </tr>
-    </table>
+          </tr>
+        </table>
 
-    <h2 style="margin-top:40px;">Manajemen Inventaris</h2>
-    <table border="1" style="width:100%; border-collapse:collapse;">
-        <tr>
+        <h2 style="margin-top:40px;">Manajemen Inventaris</h2>
+        <table class="custom-table">
+          <tr>
             <th>No</th>
             <th>Nama Item</th>
             <th>Harga Sewa</th>
-            <th style="width:160px;">Aksi</th>
-        </tr>
-        <?php $no=1; while($row = $inventaris->fetch_assoc()): ?>
-        <tr>
+            <th>Aksi</th>
+          </tr>
+          <?php $no=1; while($row = $inventaris->fetch_assoc()): ?>
+          <tr>
             <td><?= $no++ ?></td>
             <td><?= htmlspecialchars($row['nama_item']) ?></td>
             <td>Rp <?= number_format($row['harga_sewa'],0,',','.') ?>/hari</td>
             <td>
-                <a href="edit_inventaris.php?id=<?= $row['id_item'] ?>" class="button">Edit</a>
-                <a href="hapus_inventaris.php?id=<?= $row['id_item'] ?>" class="button" onclick="return confirm('Hapus inventaris ini?')">Hapus</a>
+              <a href="edit_inventaris.php?id=<?= $row['id_item'] ?>" class="link-button">Edit</a>
+              <a href="hapus_inventaris.php?id=<?= $row['id_item'] ?>" class="link-button text-danger" onclick="return confirm('Hapus inventaris ini?')">Hapus</a>
             </td>
-        </tr>
-        <?php endwhile; ?>
-        <tr>
+          </tr>
+          <?php endwhile; ?>
+          <tr>
             <td colspan="4" style="text-align:center;">
-                <a href="tambah_inventaris.php" class="button">Tambah Inventaris</a>
+              <a href="tambah_inventaris.php" class="button" style="background:#007bff;">+ Tambah Inventaris</a>
             </td>
-        </tr>
-    </table>
-</div>
-
-<?php include 'footer.php'; ?>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </div>
+  <?php include 'footer.php'; ?>
+</body>
+</html>

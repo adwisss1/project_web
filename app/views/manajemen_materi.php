@@ -1,18 +1,14 @@
 <?php
-// filepath: d:\dari c\2Xampp\instal\htdocs\SI-BIRAMA\app\views\manajemen_materi.php
 session_start();
 require_once __DIR__ . '/../config/config.php';
 
-// Pastikan hanya pengurus yang bisa akses
 if (!isset($_SESSION["user"]) || $_SESSION["user"]["role"] !== "pengurus") {
     header("Location: login.php");
     exit();
 }
 
-// Ambil daftar minat bakat untuk filter
 $minat_result = $mysqli->query("SELECT id_minat_bakat, nama_minat_bakat FROM minat_bakat");
 
-// Ambil filter minat bakat jika ada
 $id_minat_bakat = isset($_GET['id_minat_bakat']) ? intval($_GET['id_minat_bakat']) : 0;
 $nama_minat_bakat = '';
 if ($id_minat_bakat) {
@@ -24,7 +20,6 @@ if ($id_minat_bakat) {
     $stmt->close();
 }
 
-// Ambil data materi latihan sesuai filter
 $materi_result = null;
 if ($id_minat_bakat) {
     $stmt = $mysqli->prepare("SELECT id, bidang_minat, minggu, deskripsi, materi, link_materi FROM materi_latihan WHERE bidang_minat=?");
@@ -33,68 +28,78 @@ if ($id_minat_bakat) {
     $materi_result = $stmt->get_result();
 }
 ?>
-
-<?php include 'header.php'; ?>
-
-<div class="content">
-    <h2>Manajemen Materi Latihan</h2>
-    <form method="get" style="margin-bottom:20px;">
-        <label for="id_minat_bakat"><b>Pilih Minat Bakat:</b></label>
-        <select name="id_minat_bakat" id="id_minat_bakat" required>
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Manajemen Materi Latihan</title>
+  <link rel="stylesheet" href="/SI-BIRAMA/public/css/style.css">
+</head>
+<body>
+  <div class="layout-wrapper">
+    <?php include 'sidebar_pengurus.html'; ?>
+    <div class="main-content">
+      <div class="content">
+        <h2>Manajemen Materi Latihan</h2>
+        <form method="get" class="form-warna">
+          <label for="id_minat_bakat"><b>Pilih Minat Bakat:</b></label>
+          <select name="id_minat_bakat" id="id_minat_bakat" required>
             <option value="">-- Pilih Minat Bakat --</option>
             <?php
             $minat_result->data_seek(0);
             while ($minat = $minat_result->fetch_assoc()) {
-                $selected = ($id_minat_bakat == $minat['id_minat_bakat']) ? 'selected' : '';
-                echo '<option value="'.$minat['id_minat_bakat'].'" '.$selected.'>'.htmlspecialchars($minat['nama_minat_bakat']).'</option>';
+              $selected = ($id_minat_bakat == $minat['id_minat_bakat']) ? 'selected' : '';
+              echo '<option value="'.$minat['id_minat_bakat'].'" '.$selected.'>'.htmlspecialchars($minat['nama_minat_bakat']).'</option>';
             }
             ?>
-        </select>
-        <button type="submit">Tampilkan</button>
-    </form>
+          </select>
+          <button type="submit" class="button">Tampilkan</button>
+        </form>
 
-    <?php if ($id_minat_bakat && $materi_result): ?>
-        <h3>Materi Latihan untuk: <?= htmlspecialchars($nama_minat_bakat) ?></h3>
-        <a href="tambah_materi.php?bidang_minat=<?= urlencode($nama_minat_bakat) ?>">Tambah Materi Baru</a>
-        <table border="1" cellpadding="5" cellspacing="0">
+        <?php if ($id_minat_bakat && $materi_result): ?>
+          <h3>Materi Latihan untuk: <?= htmlspecialchars($nama_minat_bakat) ?></h3>
+          <a href="tambah_materi.php?bidang_minat=<?= urlencode($nama_minat_bakat) ?>" class="button" >+ Tambah Materi Baru</a>
+          <table class="custom-table" style="margin-top:10px;">
             <tr>
-                <th>No</th>
-                <th>Minggu</th>
-                <th>Deskripsi</th>
-                <th>Materi</th>
-                <th>Link</th>
-                <th>Aksi</th>
+              <th>No</th>
+              <th>Minggu</th>
+              <th>Deskripsi</th>
+              <th>Materi</th>
+              <th>Link</th>
+              <th>Aksi</th>
             </tr>
-            <?php
-            $no = 1;
-            while ($materi = $materi_result->fetch_assoc()) {
-                echo "<tr>";
-                echo "<td>{$no}</td>";
-                echo "<td>" . htmlspecialchars($materi["minggu"]) . "</td>";
-                echo "<td>" . htmlspecialchars($materi["deskripsi"]) . "</td>";
-                echo "<td>" . htmlspecialchars($materi["materi"]) . "</td>";
-                echo "<td>";
-                if (!empty($materi["link_materi"])) {
-                    echo '<a href="' . htmlspecialchars($materi["link_materi"]) . '" target="_blank">Akses</a>';
-                } else {
-                    echo "<span style='color:red'>Tidak ada link</span>";
-                }
-                echo "</td>";
-                echo "<td>
-                    <a href='edit_materi.php?id=" . $materi["id"] . "'>Edit</a> | 
-                    <a href='hapus_materi.php?id=" . $materi["id"] . "' onclick=\"return confirm('Yakin hapus materi ini?')\">Hapus</a>
-                </td>";
-                echo "</tr>";
-                $no++;
-            }
-            ?>
-        </table>
-    <?php elseif ($id_minat_bakat): ?>
-        <p>Belum ada materi untuk minat bakat ini. <a href="tambah_materi.php?bidang_minat=<?= urlencode($nama_minat_bakat) ?>">Tambah Materi Baru</a></p>
-    <?php endif; ?>
+            <?php $no = 1;
+            while ($materi = $materi_result->fetch_assoc()): ?>
+              <tr>
+                <td><?= $no++ ?></td>
+                <td><?= htmlspecialchars($materi["minggu"]) ?></td>
+                <td><?= htmlspecialchars($materi["deskripsi"]) ?></td>
+                <td><?= htmlspecialchars($materi["materi"]) ?></td>
+                <td>
+                  <?php if (!empty($materi["link_materi"])): ?>
+                    <a href="<?= htmlspecialchars($materi["link_materi"]) ?>" target="_blank">Akses</a>
+                  <?php else: ?>
+                    <span style="color:red;">Tidak ada link</span>
+                  <?php endif; ?>
+                </td>
+                <td>
+                  <a href="edit_materi.php?id=<?= $materi["id"] ?>" class="link-button">Edit</a>
+                  <a href="hapus_materi.php?id=<?= $materi["id"] ?>" class="link-button text-danger" onclick="return confirm('Yakin hapus materi ini?')">Hapus</a>
+                </td>
+              </tr>
+            <?php endwhile; ?>
+          </table>
+        <?php elseif ($id_minat_bakat): ?>
+          <p>Belum ada materi untuk minat bakat ini. 
+              <button type="button" class="button" onclick="window.location.href='tambah_materi.php?bidang_minat=<?= urlencode($nama_minat_bakat) ?>'">Tambah Materi Baru</button>
+          </p>
+        <?php endif; ?>
 
-    <br>
-    <a href="beranda_pengurus.php">Kembali ke Beranda Pengurus</a>
-</div>
-
-<?php include 'footer.php'; ?>
+        <br>
+<button type="button" onclick="window.location.href='beranda_pengurus.php'" class="button">← Kembali ke Beranda</button>
+      </div>
+    </div>
+  </div>
+  <?php include 'footer.php'; ?>
+</body>
+</html>

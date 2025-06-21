@@ -19,7 +19,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 }
 ?>
 
-<?php include 'header.php'; ?>
+<?php include 'header_beranda.php'; ?>
 
 <div class="form-container">
     <form name="form_talent" action="#" method="post" onsubmit="return validasiFormTalent();">

@@ -11,14 +11,9 @@ $inventaris = $mysqli->query("SELECT * FROM inventaris");
 $pengumuman = $mysqli->query("SELECT * FROM pengumuman ORDER BY id DESC");
 ?>
 
-<?php include 'header.php'; ?>
+<?php include 'header_beranda.php'; ?>
 <div class="content">
-
-    <?php if (!isset($_SESSION["user"])): ?>
-        <div style="text-align:center; margin-bottom:24px;">
-            <a href="/SI-BIRAMA/app/views/login.php" class="button">Login</a>
-        </div>
-    <?php elseif ($is_pengurus): ?>
+    <?php if ($is_pengurus): ?>
         <div style="text-align:center; margin-bottom:24px;">
             <a href="beranda_pengurus.php" class="button">&larr; Kembali ke Halaman Pengurus</a>
         </div>
@@ -71,7 +66,7 @@ $pengumuman = $mysqli->query("SELECT * FROM pengumuman ORDER BY id DESC");
         <div class="beranda-col" style="max-width:400px;margin:auto;">
             <h2>Terkait Jadi Anggota?</h2>
             <p>Berminat menjadi anggota UKMU Seni dan Budaya?</p>
-            <a href="form_pendaftaran.php" class="form-link">Formulir Pendaftaran</a>
+            <a href="/SI-BIRAMA/app/views/form_pendaftaran.php" class="btn btn-primary">Formulir Pendaftaran</a>
         </div>
     </div>
 
@@ -111,16 +106,6 @@ $pengumuman = $mysqli->query("SELECT * FROM pengumuman ORDER BY id DESC");
             </tr>
             <?php endwhile; ?>
         </table>
-    </div>
-
-    <!-- Portofolio dan Layanan -->
-    <div class="beranda-section">
-        <h2>Portofolio dan Layanan</h2>
-        <ul>
-            <li><a href="/SI-BIRAMA/app/views/portofolio.php">Lihat Portofolio</a></li>
-            <li><a href="/SI-BIRAMA/app/views/formSewa.php">Formulir Penyewaan Alat & Kostum</a></li>
-            <li><a href="/SI-BIRAMA/app/views/bookTalent.php">Formulir Penyewaan Talent</a></li>
-        </ul>
     </div>
 </div>
 

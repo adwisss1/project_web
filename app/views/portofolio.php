@@ -6,7 +6,7 @@ $is_pengurus = isset($_SESSION["user"]["role"]) && $_SESSION["user"]["role"] ===
 $portofolio = $mysqli->query("SELECT * FROM portofolio ORDER BY id_portofolio DESC");
 ?>
 
-<?php include 'header.php'; ?>
+<?php include 'header_beranda.php'; ?>
 
 <div class="content">
     <h1>Portofolio Sanggar Birama</h1>
