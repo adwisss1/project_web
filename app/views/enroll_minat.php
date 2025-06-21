@@ -23,20 +23,32 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $result = $validasi_query->get_result();
 
     if ($result->num_rows > 0) {
-        // Cek apakah user sudah pernah enroll minat bakat ini
-        $cek = $mysqli->prepare("SELECT * FROM anggota WHERE user_id = ? AND id_minat_bakat = ?");
-        $cek->bind_param("ii", $user_id, $id_minat_bakat);
-        $cek->execute();
-        $cek_result = $cek->get_result();
-        if ($cek_result->num_rows > 0) {
-            $error_message = "Anda sudah terdaftar pada minat bakat ini.";
+        // Ambil id_anggota dari user_id
+        $stmt = $mysqli->prepare("SELECT id FROM anggota WHERE user_id = ?");
+        $stmt->bind_param("i", $user_id);
+        $stmt->execute();
+        $stmt->bind_result($id_anggota);
+        $stmt->fetch();
+        $stmt->close();
+
+        if (!$id_anggota) {
+            $error_message = "Data anggota tidak ditemukan.";
         } else {
-            // Insert ke tabel anggota (hanya user_id dan id_minat_bakat, kolom lain bisa NULL/default)
-            $stmt = $mysqli->prepare("INSERT INTO anggota (user_id, id_minat_bakat, nama, nra, angkatan) VALUES (?, ?, '', '', 0)");
-            $stmt->bind_param("ii", $user_id, $id_minat_bakat);
-            $stmt->execute();
-            header("Location: beranda_anggota.php?success=enrolled");
-            exit();
+            // Cek apakah user sudah pernah enroll minat bakat ini
+            $cek = $mysqli->prepare("SELECT * FROM anggota_minat_bakat WHERE id_anggota = ? AND id_minat_bakat = ?");
+            $cek->bind_param("ii", $id_anggota, $id_minat_bakat);
+            $cek->execute();
+            $cek_result = $cek->get_result();
+            if ($cek_result->num_rows > 0) {
+                $error_message = "Anda sudah terdaftar pada minat bakat ini.";
+            } else {
+                // Insert ke tabel anggota_minat_bakat
+                $stmt = $mysqli->prepare("INSERT INTO anggota_minat_bakat (id_anggota, id_minat_bakat) VALUES (?, ?)");
+                $stmt->bind_param("ii", $id_anggota, $id_minat_bakat);
+                $stmt->execute();
+                header("Location: beranda_anggota.php?success=enrolled");
+                exit();
+            }
         }
     } else {
         $error_message = "Enrollment key tidak valid!";
@@ -67,9 +79,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             </form>
 
             <?php if (isset($error_message)) { echo "<p style='color:red;'>$error_message</p>"; } ?>
-                <form action="beranda_anggota.php" method="get" style="display:inline;">
-                    <button type="submit" class="button">Kembali ke Dashboard</button>
-                </form>
+            <form action="beranda_anggota.php" method="get" style="display:inline;">
+                <button type="submit" class="button">Kembali ke Dashboard</button>
+            </form>
         </div>
     </div>
 </div>
