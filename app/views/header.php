@@ -7,7 +7,3 @@
     <link rel="stylesheet" href="/SI-BIRAMA/public/css/style.css">
 </head>
 <body>
-    <div class="form-container">
-        <header>
-            <h1>Selamat Datang di Website Sanggar Birama</h1>
-        </header>
