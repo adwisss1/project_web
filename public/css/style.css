@@ -263,12 +263,247 @@
   display: inline-block;
   margin: 3px 5px;
 }
+/* === TABEL MATERI LATIHAN ANGGOTA === */
+.custom-table-materi-latihan {
+  border-collapse: collapse;
+  width: 100%;
+  table-layout: fixed;
+  padding-bottom: 20px;
+  background: #fff;
+}
+
+.custom-table-materi-latihan th,
+.custom-table-materi-latihan td {
+  border: 1px solid #8B0000;
+  padding: 3px 5px;
+  font-size: 14px;
+  vertical-align: middle;
+  word-wrap: break-word;
+  white-space: normal;
+}
+
+/* Kolom 1: Minat Bakat */
+.custom-table-materi-latihan th:nth-child(1),
+.custom-table-materi-latihan td:nth-child(1) {
+  width: 140px;
+}
+
+/* Kolom 2: Materi */
+.custom-table-materi-latihan th:nth-child(2),
+.custom-table-materi-latihan td:nth-child(2) {
+  width: 260px;
+}
+
+/* Kolom 3: Link */
+.custom-table-materi-latihan th:nth-child(3),
+.custom-table-materi-latihan td:nth-child(3) {
+  width: 70px;
+  text-align: center;
+}
+/* === TABEL JADWAL ANGGOTA === */
+.custom-table-jadwal-anggota {
+  border-collapse: collapse;
+  width: 100%;
+  table-layout: fixed;
+  padding-bottom: 20px;
+  background: #fff;
+}
+
+.custom-table-jadwal-anggota th,
+.custom-table-jadwal-anggota td {
+  border: 1px solid #8B0000;
+  padding: 3px 5px; /* spacing mepet seperti custom-table-jadwal */
+  font-size: 12px;
+  vertical-align: middle;
+  word-wrap: break-word;
+  white-space: normal;
+}
+
+/* Kolom 1: Minat Bakat (cukup lebar) */
+.custom-table-jadwal-anggota th:nth-child(1),
+.custom-table-jadwal-anggota td:nth-child(1) {
+  width: 140px;
+}
+
+/* Kolom 2: Jenis Jadwal */
+.custom-table-jadwal-anggota th:nth-child(2),
+.custom-table-jadwal-anggota td:nth-child(2) {
+  width: 80px;
+}
+
+/* Kolom 3: Hari/Tanggal */
+.custom-table-jadwal-anggota th:nth-child(3),
+.custom-table-jadwal-anggota td:nth-child(3) {
+  width: 90px;
+}
+
+/* Kolom 4: Jam */
+.custom-table-jadwal-anggota th:nth-child(4),
+.custom-table-jadwal-anggota td:nth-child(4) {
+  width: 70px;
+}
+
+/* Kolom 5: Durasi */
+.custom-table-jadwal-anggota th:nth-child(5),
+.custom-table-jadwal-anggota td:nth-child(5) {
+  width: 60px;
+}
+
+/* Kolom 6: Mentor/Keterangan (paling panjang) */
+.custom-table-jadwal-anggota th:nth-child(6),
+.custom-table-jadwal-anggota td:nth-child(6) {
+  width: 220px;
+}
+
+/* === TABEL PROGRAM KERJA CUSTOM === */
+.custom-table-program {
+  border-collapse: collapse;
+  width: 100%;
+  table-layout: fixed;
+  padding-bottom: 20px;
+  background: #fff;
+}
+
+/* Kolom rata-rata */
+.custom-table-program th,
+.custom-table-program td {
+  border: 1px solid #8B0000;
+  padding: 5px 7px;
+  font-size: 13px;
+  vertical-align: middle;
+  word-wrap: break-word;
+  white-space: normal;
+}
+
+/* Kolom 1: Nama Program (besar) */
+.custom-table-program th:nth-child(1),
+.custom-table-program td:nth-child(1) {
+  width: 100px;
+}
+
+/* Kolom 2: Tanggal Mulai */
+.custom-table-program th:nth-child(2),
+.custom-table-program td:nth-child(2),
+/* Kolom 3: Tanggal Selesai */
+.custom-table-program th:nth-child(3),
+.custom-table-program td:nth-child(3),
+/* Kolom 4: Tanggal Selesai Agenda */
+.custom-table-program th:nth-child(4),
+.custom-table-program td:nth-child(4) {
+  width: 70px;
+}
+
+/* Kolom 5: Deskripsi (paling panjang) */
+.custom-table-program th:nth-child(5),
+.custom-table-program td:nth-child(5) {
+  width: 260px;
+}
+
+/* Kolom 6: PJ Pengurus (besar, sama dengan kolom 1) */
+.custom-table-program th:nth-child(6),
+.custom-table-program td:nth-child(6) {
+  width: 100px;
+}
+
+/* Kolom 7: Ketua Panitia */
+.custom-table-program th:nth-child(7),
+.custom-table-program td:nth-child(7),
+/* Kolom 8: Status */
+.custom-table-program th:nth-child(8),
+.custom-table-program td:nth-child(8) {
+  width: 90px;
+}
+
+/* Kolom 9: Aksi (cukup untuk 2 tombol berdampingan) */
+.custom-table-program th:nth-child(9),
+.custom-table-program td:nth-child(9) {
+  width: 110px;
+  text-align: center;
+}
+
+/* Tombol di kolom aksi */
+.custom-table-program td .button {
+  display: inline-block;
+  margin: 2px 2px;
+  padding: 4px 10px;
+  font-size: 13px;
+  min-width: unset;
+  max-width: unset;
+  height: auto;
+  box-sizing: border-box;
+}
+/* === TABEL MANAJEMEN jadwal === */
+.custom-table-jadwal {
+  border-collapse: collapse;
+  width: 100%;
+  table-layout: fixed;
+  padding-bottom: 20px;
+}
+
+.custom-table-jadwal th,
+.custom-table-jadwal td {
+  border: 1px solid #8B0000;
+  padding: 3px 5px; /* Lebih mepet */
+  font-size: 14px;
+  vertical-align: middle;
+  word-wrap: break-word;
+  white-space: normal;
+}
+
+/* Kolom no */
+.custom-table-jadwal th:nth-child(1),
+.custom-table-jadwal td:nth-child(1) {
+  width: 30px;
+}
+
+/* Kolom minat bakat */
+.custom-table-jadwal th:nth-child(2),
+.custom-table-jadwal td:nth-child(2) {
+  width: 140px;
+}
+
+/* Kolom hari */
+.custom-table-jadwal th:nth-child(3),
+.custom-table-jadwal td:nth-child(3) {
+  width: 60px;
+}
+
+/* Kolom jam */
+.custom-table-jadwal th:nth-child(4),
+.custom-table-jadwal td:nth-child(4) {
+  width: 70px;
+}
+
+/* Kolom durasi */
+.custom-table-jadwal th:nth-child(5),
+.custom-table-jadwal td:nth-child(5) {
+  width: 50px;
+}
+
+/* Kolom mentor */
+.custom-table-jadwal th:nth-child(6),
+.custom-table-jadwal td:nth-child(6) {
+  width: 180px;
+}
+
+/* Kolom aksi */
+.custom-table-jadwal th:nth-child(7),
+.custom-table-jadwal td:nth-child(7) {
+  width: 220px;
+}
+
 /* === TABEL evaluasi ANGGOTA CUSTOM === */
 .custom-table-eval {
   border-collapse: collapse;
   width: 100%;
   table-layout: fixed; /* kunci lebar kolom */
 }
+/* Link di dalam kolom aksi */
+.custom-table-jadwal td a {
+  display: inline-block;
+  margin: 3px 5px;
+}
+
 
 .custom-table-eval th,
 .custom-table-eval td {

@@ -162,7 +162,7 @@ if (($mode === 'add' || $mode === 'edit') && $anggota_id > 0) {
                         <textarea name="umpan_balik" id="umpan_balik" rows="4" cols="60" required><?= htmlspecialchars($umpan_balik) ?></textarea><br><br>
                         <button type="submit" class="button">Simpan</button>
                         <!-- <a href="evaluasi_anggota.php?minat_evaluasi=<?= $minat_evaluasi ?>" class="button">Batal</a> -->
-                        <form method="get" action="evaluasi_anggota.php" style="display:inline;">
+                        <form method="get" action="evaluasi_anggota.php" class="button">
                             <input type="hidden" name="minat_evaluasi" value="<?= $minat_evaluasi ?>">
                             <button type="submit" class="button">Batal</button>
                         </form>

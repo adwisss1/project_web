@@ -50,7 +50,7 @@ while ($row = $minat_result->fetch_assoc()) {
             <?php if (empty($minat_bakat_list)): ?>
                 <p>Anda belum mengikuti minat bakat apapun.</p>
             <?php else: ?>
-                <table class="custom-table">
+                <table class="custom-table-jadawl-anggota">
                     <tr>
                         <th>Minat Bakat</th>
                         <th>Jenis Jadwal</th>
@@ -100,7 +100,7 @@ while ($row = $minat_result->fetch_assoc()) {
             <?php if (empty($minat_bakat_list)): ?>
                 <p>Tidak ada materi karena Anda belum mengikuti minat bakat apapun.</p>
             <?php else: ?>
-                <table class="custom-table">
+                <table class="custom-table-materi-latihan">
                     <tr>
                         <th>Minat Bakat</th>
                         <th>Materi</th>

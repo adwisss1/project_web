@@ -25,7 +25,7 @@ $inventaris = $mysqli->query("SELECT * FROM inventaris");
     <div class="main-content">
       <div class="content">
         <h2>Manajemen Talent</h2>
-        <a href="beranda_pengurus.php" class="button" style="margin-bottom:18px;display:inline-block;">← Kembali ke Halaman Pengurus</a>
+        <!-- <a href="beranda_pengurus.php" class="button" style="margin-bottom:18px;display:inline-block;">← Kembali ke Halaman Pengurus</a> -->
 
         <table class="custom-table">
           <tr>

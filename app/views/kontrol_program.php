@@ -46,11 +46,10 @@ $progress_result = $mysqli->query($progress_sql);
     <div class="main-content">
       <div class="content">
         <h2>Kontrol Program Kerja</h2>
-        <a href="beranda_pengurus.php" class="button" style="margin-bottom: 15px;">← Kembali ke Beranda</a>
         <a href="tambah_program.php" class="button">+ Tambah Program</a>
 
         <h3 style="margin-top: 25px;">Daftar Program Kerja</h3>
-        <table class="custom-table">
+        <table class="custom-table-program">
           <tr>
             <th>Nama Program</th>
             <th>Tanggal Mulai</th>

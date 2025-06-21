@@ -38,10 +38,10 @@ $jadwal_kondisional_result = $stmt->get_result();
     <div class="main-content">
       <div class="content">
         <h2>Manajemen Jadwal Latihan</h2>
-        <a href="beranda_pengurus.php" class="button" style="margin-bottom: 20px;">← Kembali ke Beranda Pengurus</a>
+        <!-- <a href="beranda_pengurus.php" class="button" style="margin-bottom: 20px;">← Kembali ke Beranda Pengurus</a> -->
 
         <h3>Daftar Jadwal Rutin</h3>
-        <table class="custom-table">
+        <table class="custom-table-jadwal">
           <tr>
             <th>No</th>
             <th>Minat Bakat</th>
@@ -62,15 +62,24 @@ $jadwal_kondisional_result = $stmt->get_result();
               <td><?= htmlspecialchars($rutin["durasi_latihan"]) ?></td>
               <td><?= htmlspecialchars($rutin["mentor"]) ?></td>
               <td>
-                <a href="edit_jadwal_rutin.php?id=<?= urlencode($rutin["id"]) ?>" class="button" style="background:#007bff;">Edit</a>
-                <a href="buka_sesi_absensi.php?id_jadwal=<?= $rutin["id"] ?>&tipe=rutin" class="button" style="background:#28a745;">Absensi</a>
+                <form action="edit_jadwal_rutin.php" method="get" style="display:inline;">
+                  <input type="hidden" name="id" value="<?= urlencode($rutin["id"]) ?>">
+                <button type="submit" class="button" style="background:#007bff;">Edit</button>
+                </form>
+                <form action="buka_sesi_absensi.php" method="get" style="display:inline;">
+                  <input type="hidden" name="id_jadwal" value="<?= $rutin["id"] ?>">
+                  <input type="hidden" name="tipe" value="rutin">
+                  <button type="submit" class="button" style="background:#28a745;">Absensi</button>
+                </form>
               </td>
             </tr>
           <?php endwhile; ?>
           <tr>
-            <td colspan="7" style="text-align:right;">
-                <a href="jadwal_rutin.php" class="button" style="background:#007bff;">Tambah Jadwal Rutin</a>
-            </td>
+<td colspan="7" style="text-align:right;">
+    <form action="tambah_jadwal_rutin.php" method="get" style="display:inline;">
+        <button type="submit" class="button" style="background:#007bff;">Tambah Jadwal Rutin</button>
+    </form>
+</td>
           </tr>
         </table>
 
