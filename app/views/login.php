@@ -23,16 +23,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $_SESSION["role"] = $user["role"]; // Simpan role pengguna
 
         // Redirect sesuai role
-        if ($_SESSION["role"] === "anggota") {
-            header("Location: ../views/beranda_anggota.php");
-            exit();
-        } elseif ($_SESSION["role"] === "pengurus") {
-            header("Location: ../views/beranda_pengurus.php");
-            exit();
-        } else {
-            header("Location: ../views/beranda.php");
-            exit();
-        }
+            if ($_SESSION["role"] === "anggota") {
+                header("Location: /SI-BIRAMA/app/views/anggota/beranda_anggota.php");
+                exit();
+            } elseif ($_SESSION["role"] === "pengurus") {
+                header("Location: /SI-BIRAMA/app/views/pengurus/beranda_pengurus.php");
+                exit();
+            } else {
+                header("Location: /SI-BIRAMA/app/views/tamu/beranda.php");
+                exit();
+            }
     } else {
         echo "<p style='color: red;'>Username atau password salah!</p>";
     }
