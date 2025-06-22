@@ -27,7 +27,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 header("Location: /SI-BIRAMA/app/views/anggota/beranda_anggota.php");
                 exit();
             } elseif ($_SESSION["role"] === "pengurus") {
-                header("Location: /SI-BIRAMA/app/views/pengurus/beranda_pengurus.php");
+                header("Location: /SI-BIRAMA/app/controllers/pengurus/beranda_pengurus.php");
                 exit();
             } else {
                 header("Location: /SI-BIRAMA/app/views/tamu/beranda.php");

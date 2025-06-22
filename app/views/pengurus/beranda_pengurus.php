@@ -1,35 +1,3 @@
-<?php
-session_start();
-require_once __DIR__ . '/../../config/config.php';
-
-if (!isset($_SESSION["user"]) || !is_array($_SESSION["user"]) || $_SESSION["user"]["role"] !== "pengurus") {
-    header("Location: login.php");
-    exit();
-}
-
-$user_id = $_SESSION["user"]["id"];
-
-$stmt = $mysqli->prepare("SELECT id_pengurus, nama_pengurus, nim, angkatan, jabatan, kontak FROM pengurus");
-$stmt->execute();
-$pengurus_result = $stmt->get_result();
-
-$stmt = $mysqli->prepare("SELECT id, nama, nra, user_id, angkatan FROM anggota");
-$stmt->execute();
-$anggota_result = $stmt->get_result();
-
-$stmt = $mysqli->prepare("SELECT id_minat_bakat, nama_minat_bakat, enrollment_key, id_bidang FROM minat_bakat");
-$stmt->execute();
-$minat_result = $stmt->get_result();
-
-$stmt = $mysqli->prepare("SELECT user_id, umpan_balik FROM evaluasi WHERE user_id = ?");
-$stmt->bind_param("i", $user_id);
-$stmt->execute();
-$evaluasi_result = $stmt->get_result();
-
-$stmt = $mysqli->prepare("SELECT id, bidang_minat, minggu, deskripsi, materi, link_materi FROM materi_latihan");
-$stmt->execute();
-$materi_result = $stmt->get_result();
-?>
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -117,8 +85,7 @@ $materi_result = $stmt->get_result();
             <th>Waktu Submit</th>
           </tr>
           <?php $no = 1;
-          $result = $mysqli->query("SELECT * FROM penyewaan ORDER BY waktu_submit DESC");
-          while ($row = $result->fetch_assoc()): ?>
+          while ($row = $penyewaan_result->fetch_assoc()): ?>
             <tr>
               <td><?= $no++ ?></td>
               <td><?= htmlspecialchars($row["nama"]) ?></td>
@@ -148,8 +115,7 @@ $materi_result = $stmt->get_result();
             <th>Waktu Submit</th>
           </tr>
           <?php $no = 1;
-          $result = $mysqli->query("SELECT * FROM book_talent ORDER BY waktu_submit DESC");
-          while ($row = $result->fetch_assoc()): ?>
+          while ($row = $book_talent_result->fetch_assoc()): ?>
             <tr>
               <td><?= $no++ ?></td>
               <td><?= htmlspecialchars($row["nama_client"]) ?></td>
