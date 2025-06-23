@@ -24,13 +24,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         // Redirect sesuai role
             if ($_SESSION["role"] === "anggota") {
-                header("Location: /SI-BIRAMA/app/views/anggota/beranda_anggota.php");
+                header("Location: /SI-BIRAMA/app/controllers/anggota/beranda_anggota.php");
                 exit();
             } elseif ($_SESSION["role"] === "pengurus") {
                 header("Location: /SI-BIRAMA/app/controllers/pengurus/beranda_pengurus.php");
                 exit();
             } else {
-                header("Location: /SI-BIRAMA/app/views/tamu/beranda.php");
+                header("Location: /SI-BIRAMA/app/controllers/beranda.php");
                 exit();
             }
     } else {

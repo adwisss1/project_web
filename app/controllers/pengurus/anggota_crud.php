@@ -56,9 +56,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($mode === 'add' || $mode === 'edit
             if ($sudah_ada > 0) {
                 $error = "Username sudah digunakan.";
             } else {
-                $hash = password_hash($password, PASSWORD_DEFAULT);
+                // TANPA HASH
                 $stmt = $mysqli->prepare("INSERT INTO users (username, password, role) VALUES (?, ?, 'anggota')");
-                $stmt->bind_param("ss", $username, $hash);
+                $stmt->bind_param("ss", $username, $password);
                 if ($stmt->execute()) {
                     $user_id = $stmt->insert_id;
                     $stmt->close();

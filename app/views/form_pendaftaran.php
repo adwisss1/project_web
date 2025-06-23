@@ -1,30 +1,3 @@
-<?php
-session_start();
-require_once __DIR__ . '/../config/config.php';
-
-$error = "";
-if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    $nama = trim($_POST["nama"]);
-    $no_hp = trim($_POST["no_hp"]);
-    $jurusan = trim($_POST["jurusan"]);
-    $nim = trim($_POST["nim"]);
-    $minat_bakat = trim($_POST["minat_bakat"]);
-
-    if ($nama === "" || $no_hp === "" || $jurusan === "" || $nim === "" || $minat_bakat === "") {
-        $error = "Semua field wajib diisi.";
-    } else {
-        $stmt = $mysqli->prepare("INSERT INTO pendaftaran (nama, no_hp, jurusan, nim, minat_bakat) VALUES (?, ?, ?, ?, ?)");
-        $stmt->bind_param("sssss", $nama, $no_hp, $jurusan, $nim, $minat_bakat);
-        if ($stmt->execute()) {
-            echo "<script>alert('Pendaftaran berhasil!');window.location='beranda.php';</script>";
-            exit;
-        } else {
-            $error = "Gagal menyimpan data.";
-        }
-        $stmt->close();
-    }
-}
-?>
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -45,10 +18,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             </button>
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav mr-auto">
-                    <li class="nav-item"><a class="nav-link" href="/SI-BIRAMA/app/views/beranda.php">Beranda</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/SI-BIRAMA/app/views/portofolio.php">Portofolio</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/SI-BIRAMA/app/views/formSewa.php">Penyewaan Alat & Kostum</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/SI-BIRAMA/app/views/bookTalent.php">Penyewaan Talent</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/SI-BIRAMA/">Beranda</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/SI-BIRAMA/app/controllers/portofolio.php">Portofolio</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/SI-BIRAMA/app/controllers/formSewa.php">Penyewaan Alat & Kostum</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/SI-BIRAMA/app/controllers/bookTalent.php">Penyewaan Talent</a></li>
                 </ul>
                 <ul class="navbar-nav">
                     <li class="nav-item">
@@ -69,7 +42,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     </div>
 
     <div class="container" style="margin-top: 20px; max-width: 650px; background: rgba(255,255,255,0.9); padding: 30px; border-radius: 10px;">
-        <?php if ($error): ?>
+        <?php if (isset($error) && $error): ?>
             <div class="alert alert-danger"><?= htmlspecialchars($error) ?></div>
         <?php endif; ?>
         <form method="post">
@@ -102,9 +75,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             </div>
             <div class="text-center mt-4">
                 <button type="submit" class="button">Daftar</button>
-                <form method="get" action="beranda.php" style="display:inline;">
-                    <button type="button" class="button" onclick="window.location.href='beranda.php'">Batal</button>
-                </form>
+                <button type="button" class="button" onclick="window.location.href='beranda.php'">Batal</button>
             </div>
         </form>
     </div>

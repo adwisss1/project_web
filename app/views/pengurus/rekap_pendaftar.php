@@ -13,6 +13,10 @@
         <button class="button" onclick="window.location.href='manajemen_anggota_kinerja.php'">&larr; Kembali ke Manajemen Anggota</button>
         <h2>Rekap Pendaftar Anggota</h2>
 
+        <?php if (isset($error) && $error): ?>
+          <div class="alert alert-danger"><?= htmlspecialchars($error) ?></div>
+        <?php endif; ?>
+
         <div class="table-wrapper">
           <table class="custom-table">
             <thead>
@@ -29,17 +33,21 @@
             <tbody>
               <?php
               $no = 1;
-              while ($row = $result->fetch_assoc()) {
-                  echo "<tr>";
-                  echo "<td>{$no}</td>";
-                  echo "<td>" . htmlspecialchars($row['nama']) . "</td>";
-                  echo "<td>" . htmlspecialchars($row['no_hp']) . "</td>";
-                  echo "<td>" . htmlspecialchars($row['jurusan']) . "</td>";
-                  echo "<td>" . htmlspecialchars($row['nim']) . "</td>";
-                  echo "<td>" . htmlspecialchars($row['minat_bakat']) . "</td>";
-                  echo "<td>" . htmlspecialchars($row['waktu_daftar']) . "</td>";
-                  echo "</tr>";
-                  $no++;
+              if (isset($result) && $result && $result->num_rows > 0) {
+                  while ($row = $result->fetch_assoc()) {
+                      echo "<tr>";
+                      echo "<td>{$no}</td>";
+                      echo "<td>" . htmlspecialchars($row['nama']) . "</td>";
+                      echo "<td>" . htmlspecialchars($row['no_hp']) . "</td>";
+                      echo "<td>" . htmlspecialchars($row['jurusan']) . "</td>";
+                      echo "<td>" . htmlspecialchars($row['nim']) . "</td>";
+                      echo "<td>" . htmlspecialchars($row['minat_bakat']) . "</td>";
+                      echo "<td>" . htmlspecialchars($row['waktu_daftar']) . "</td>";
+                      echo "</tr>";
+                      $no++;
+                  }
+              } else {
+                  echo '<tr><td colspan="7" style="text-align:center;">Belum ada data pendaftar.</td></tr>';
               }
               ?>
             </tbody>
