@@ -1,40 +1,3 @@
-<?php
-session_start();
-require_once __DIR__ . '/../../config/config.php';
-
-// Pastikan hanya pengurus yang bisa akses
-if (!isset($_SESSION["user"]) || $_SESSION["user"]["role"] !== "pengurus") {
-    header("Location: ../login.php");
-    exit();
-}
-
-$error = '';
-$success = '';
-
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $minat_bakat = trim($_POST['minat_bakat']);
-    $hari = trim($_POST['hari']);
-    $jam = trim($_POST['jam']);
-    $durasi = intval($_POST['durasi']);
-    $mentor = trim($_POST['mentor']);
-
-    if ($minat_bakat === '' || $hari === '' || $jam === '' || $durasi <= 0 || $mentor === '') {
-        $error = "Semua field wajib diisi.";
-    } else {
-        $stmt = $mysqli->prepare("INSERT INTO jadwal_rutin (minat_bakat, hari, jam, durasi, mentor) VALUES (?, ?, ?, ?, ?)");
-        $stmt->bind_param("sssds", $minat_bakat, $hari, $jam, $durasi, $mentor);
-        if ($stmt->execute()) {
-            $success = "Jadwal rutin berhasil ditambahkan.";
-            $stmt->close();
-            header("Location: manajemen_jadwal.php");
-            exit();
-        } else {
-            $error = "Gagal menambah jadwal rutin.";
-            $stmt->close();
-        }
-    }
-}
-?>
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -53,22 +16,42 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <?php endif; ?>
             <form method="post" class="form-warna">
                 <label>Minat Bakat:
-                    <input type="text" name="minat_bakat" required>
+                    <select name="id_minat_bakat" required>
+                        <option value="">-- Pilih Minat Bakat --</option>
+                        <?php
+                        $minat_result->data_seek(0);
+                        while ($mb = $minat_result->fetch_assoc()):
+                        ?>
+                            <option value="<?= $mb['id_minat_bakat'] ?>" <?= (isset($_POST['id_minat_bakat']) && $_POST['id_minat_bakat'] == $mb['id_minat_bakat']) ? 'selected' : '' ?>>
+                                <?= htmlspecialchars($mb['nama_minat_bakat']) ?>
+                            </option>
+                        <?php endwhile; ?>
+                    </select>
                 </label><br>
                 <label>Hari:
-                    <input type="text" name="hari" required>
+                    <select name="hari" required>
+                        <option value="">-- Pilih Hari --</option>
+                        <?php
+                        $hari_list = ['Senin','Selasa','Rabu','Kamis','Jumat','Sabtu','Minggu'];
+                        foreach ($hari_list as $h):
+                        ?>
+                            <option value="<?= $h ?>" <?= (isset($_POST['hari']) && $_POST['hari'] == $h) ? 'selected' : '' ?>><?= $h ?></option>
+                        <?php endforeach; ?>
+                    </select>
                 </label><br>
                 <label>Jam:
-                    <input type="time" name="jam" required>
+                    <input type="time" name="jam" value="<?= htmlspecialchars($_POST['jam'] ?? '') ?>" required>
                 </label><br>
                 <label>Durasi (jam):
-                    <input type="number" name="durasi" min="1" required>
+                    <input type="number" step="0.1" name="durasi" min="0.5" value="<?= htmlspecialchars($_POST['durasi'] ?? '') ?>" required>
                 </label><br>
                 <label>Mentor:
-                    <input type="text" name="mentor" required>
+                    <input type="text" name="mentor" value="<?= htmlspecialchars($_POST['mentor'] ?? '') ?>" required>
                 </label><br>
-                <button type="submit" class="button">Simpan</button>
-                <button type="button" class="button" onclick="window.location.href='manajemen_jadwal.php'">Kembali</button>
+                <div style="display:inline-flex; gap:10px;">
+                    <button type="submit" class="button">Simpan</button>
+                    <button type="button" class="button" onclick="window.location.href='manajemen_jadwal.php'">Kembali</button>
+                </div>
             </form>
         </div>
     </div>

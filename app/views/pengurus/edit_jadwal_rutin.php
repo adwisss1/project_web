@@ -1,58 +1,3 @@
-<?php
-session_start();
-require_once __DIR__ . '/../../config/config.php';
-
-// Pastikan user adalah pengurus
-if (!isset($_SESSION["user"]) || $_SESSION["user"]["role"] !== "pengurus") {
-    header("Location: login.php");
-    exit();
-}
-
-if (!isset($_GET['id'])) {
-    echo "ID jadwal tidak ditemukan.";
-    exit();
-}
-
-$id = intval($_GET['id']);
-
-// Ambil data jadwal_rutin berdasarkan id
-$stmt = $mysqli->prepare("SELECT * FROM jadwal_rutin WHERE id = ?");
-$stmt->bind_param("i", $id);
-$stmt->execute();
-$result = $stmt->get_result();
-$jadwal = $result->fetch_assoc();
-
-if (!$jadwal) {
-    echo "Data jadwal tidak ditemukan.";
-    exit();
-}
-
-// Ambil nama minat bakat
-$nama_minat_bakat = '';
-$stmt = $mysqli->prepare("SELECT nama_minat_bakat FROM minat_bakat WHERE id_minat_bakat = ?");
-$stmt->bind_param("i", $jadwal['id_minat_bakat']);
-$stmt->execute();
-$stmt->bind_result($nama_minat_bakat);
-$stmt->fetch();
-$stmt->close();
-
-// Proses update jika form disubmit
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $hari = $_POST["hari"];
-    $jam = $_POST["jam"];
-    $durasi_latihan = $_POST["durasi_latihan"];
-    $mentor = $_POST["mentor"];
-
-    $stmt = $mysqli->prepare("UPDATE jadwal_rutin SET hari=?, jam=?, durasi_latihan=?, mentor=? WHERE id=?");
-    $stmt->bind_param("ssdsi", $hari, $jam, $durasi_latihan, $mentor, $id);
-    if ($stmt->execute()) {
-        header("Location: manajemen_jadwal.php?success=update");
-        exit();
-    } else {
-        echo "Gagal update data!";
-    }
-}
-?>
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -67,7 +12,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       <div class="content">
         <h3>Edit Jadwal Rutin</h3>
         <p><strong>Minat Bakat:</strong> <?= htmlspecialchars($nama_minat_bakat) ?></p>
-        <form method="POST" class="form-warna">>
+        <?php if (!empty($error)): ?>
+          <div style="color:red"><?= htmlspecialchars($error) ?></div>
+        <?php endif; ?>
+        <form method="POST" class="form-warna">
           <label for="hari">Hari:</label>
           <select name="hari" id="hari" required>
             <?php
@@ -88,10 +36,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
           <label for="mentor">Mentor:</label>
           <input type="text" name="mentor" id="mentor" value="<?= htmlspecialchars($jadwal['mentor']) ?>" required><br>
 
-        <div>
+          <div style="display:inline-flex; gap:10px;">
             <button type="submit" class="button">Simpan Perubahan</button>
             <button type="button" class="button" onclick="window.location.href='manajemen_jadwal.php'">Batal</button>
-        </div>
+          </div>
         </form>
       </div>
     </div>

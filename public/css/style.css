@@ -4,9 +4,11 @@
 /* === LAYOUT WRAPPER DAN SIDEBAR FIX === */
 .layout-wrapper {
   display: flex;
+  flex: 1 0 auto;
+  flex-direction: row;
   min-height: 100vh;
-  height: 100vh;
-  width: 100vw;
+  /* height: 100vh;
+  width: 100vw; */
   background: linear-gradient(to bottom, #8B0000, #B22222);
 }
 
@@ -24,17 +26,7 @@
   z-index: 2;
 }
 
-.main-content {
-  flex: 1 1 0;
-  min-width: 0;
-  min-height: 100vh;
-  background: transparent;
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-  justify-content: flex-start;
-  padding: 0;
-}
+
 
 .content {
   background: #fff;
@@ -83,16 +75,31 @@
     max-width: unset;
     padding: 8px 0 0 0;
   }
-  .main-content {
-    min-height: unset;
+  /* .main-content {
+    
     padding: 0;
-  }
+    flex: 1;
+  } */
   .content {
     padding: 8px 2vw;
     width: 99vw;
     margin: 8px auto;
     max-width: 99vw;
   }
+  .main-content {
+  min-height: unset;
+  flex: 1;
+  padding: 25px;
+  /* min-width: 0; */
+  /* min-height: 100vh; */
+  background: #eec3c3;
+  display: flex;
+  display: flex;
+  flex-direction: column;
+  /* align-items: stretch;
+  justify-content: flex-start;
+  padding: 0; */
+}
 }
 
 .rekap-absensi-table {
@@ -560,11 +567,13 @@
 
 /* navbar header */
 body {
-    background-size: cover;
+    /* background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
-    background-attachment: fixed;
+    background-attachment: fixed; */
     min-height: 100vh;
+    display: flex;
+    flex-direction: column;
 }
 
 .navbar-custom {
@@ -599,8 +608,8 @@ html, body {
   margin: 0;
   padding: 0;
   min-height: 100vh;
-  display: flex;
-  flex-direction: column;
+  /* display: flex; */
+  /* flex-direction: column; */
   font-family: Arial, sans-serif;
   background: linear-gradient(to bottom, #8B0000, #B22222);
   background-size: cover;
@@ -610,9 +619,6 @@ html, body {
   color: #333;
 }
 
-.main-content {
-    flex: 1;
-}
 
 header {
     background: transparent;
@@ -710,14 +716,6 @@ a {
 a:hover {
     text-decoration: underline;
 }
-footer {
-    text-align: center;
-    padding: 15px;
-    background: transparent;
-    color: #e8a7a7;
-    margin-top: 40px;
-    text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.4);
-}
 
 /* Link Styling */
 .content a {
@@ -769,7 +767,7 @@ form {
 }
 .form-warna {
     background: #cf5f5f; /* kuning muda */
-    border: 2px solid #67221a;
+    /* border: 2px solid #67221a; */
     padding: 20px 25px;
     border-radius: 12px;
     margin-bottom: 18px;
@@ -971,9 +969,15 @@ footer {
   padding: 0px 0;
   text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.4);
   margin-top: 0;
+  margin-top: 40px;
+  padding: 15px;
+  text-align: center;
+  background: transparent;
+  color: #e8a7a7;
   /* position: relative;
   bottom: 0; */
 }
+
 
 /* Styling untuk halaman portofolio */
 /* .content {

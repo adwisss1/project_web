@@ -1,33 +1,3 @@
-<?php
-
-session_start();
-require_once __DIR__ . '/../../config/config.php';
-
-// Hanya pengurus yang boleh akses
-if (!isset($_SESSION["user"]["role"]) || $_SESSION["user"]["role"] !== "pengurus") {
-    header("Location: beranda.php");
-    exit();
-}
-
-$error = "";
-if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    $jenis_talent = trim($_POST["jenis_talent"]);
-    $keterangan = trim($_POST["keterangan"]);
-    if ($jenis_talent === "") {
-        $error = "Jenis talent tidak boleh kosong.";
-    } else {
-        $stmt = $mysqli->prepare("INSERT INTO talent (jenis_talent, keterangan) VALUES (?, ?)");
-        $stmt->bind_param("ss", $jenis_talent, $keterangan);
-        if ($stmt->execute()) {
-            header("Location: manajemen_talent&inventaris.php");
-            exit();
-        } else {
-            $error = "Gagal menambah talent.";
-        }
-        $stmt->close();
-    }
-}
-?>
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -58,7 +28,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                     <button type="button" class="button" onclick="window.location.href='manajemen_talent&inventaris.php'">Batal/kembali</button>
                 </div>
             </form>
-            <!-- <button type="button" class="button" onclick="window.location.href='manajemen_talent&inventaris.php'">Kembali ke Manajemen Talent</button> -->
         </div>
     </div>
 </div>

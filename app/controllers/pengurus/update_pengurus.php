@@ -1,6 +1,6 @@
 <?php
 // filepath: d:\dari c\2Xampp\instal\htdocs\SI-BIRAMA\app\controllers\update_pengurus.php
-require_once __DIR__ . '/../config/config.php';
+require_once __DIR__ . '/../../config/config.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $id_pengurus = intval($_POST['id_pengurus']);
@@ -15,11 +15,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if ($stmt->execute()) {
         $stmt->close();
-        header("Location: ../views/beranda_pengurus.php?success=1");
+        header("Location: beranda_pengurus.php?success=1");
         exit();
     } else {
         $stmt->close();
-        header("Location: ../views/edit_pengurus.php?id_pengurus=$id_pengurus&error=1");
+        header("Location: edit_pengurus.php?id_pengurus=$id_pengurus&error=1");
         exit();
     }
 } else {

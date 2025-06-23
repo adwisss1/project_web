@@ -1,17 +1,3 @@
-<?php
-session_start();
-require_once __DIR__ . '/../../config/config.php';
-
-// Hanya pengurus yang boleh akses
-if (!isset($_SESSION["user"]["role"]) || $_SESSION["user"]["role"] !== "pengurus") {
-    header("Location: beranda.php");
-    exit();
-}
-
-// Ambil data talent dan inventaris
-$talent = $mysqli->query("SELECT * FROM talent");
-$inventaris = $mysqli->query("SELECT * FROM inventaris");
-?>
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -25,8 +11,6 @@ $inventaris = $mysqli->query("SELECT * FROM inventaris");
     <div class="main-content">
       <div class="content">
         <h2>Manajemen Talent</h2>
-        <!-- <a href="beranda_pengurus.php" class="button" style="margin-bottom:18px;display:inline-block;">← Kembali ke Halaman Pengurus</a> -->
-
         <table class="custom-table">
           <tr>
             <th>No</th>

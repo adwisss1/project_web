@@ -1,12 +1,3 @@
-<?php
-session_start();
-require_once __DIR__ . '/../../config/config.php';
-
-if (!isset($_SESSION["user"]) || $_SESSION["user"]["role"] !== "pengurus") {
-    header("Location: ../login.php");
-    exit();
-}
-?>
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -19,29 +10,35 @@ if (!isset($_SESSION["user"]) || $_SESSION["user"]["role"] !== "pengurus") {
         <?php include 'sidebar_pengurus.html'; ?>
         <div class="main-content">
             <div class="content">
-<button type="button" class="button" onclick="window.location.href='manajemen_jadwal.php'"> <----Kembali</button>
+                <button type="button" class="button" onclick="window.location.href='manajemen_jadwal.php'">&larr; Kembali</button>
                 <h3 style="margin-top: 40px;">Tambah Jadwal Kondisional</h3>
-                <form method="POST" action="/SI-BIRAMA/app/controllers/tambah_jadwal.php" class="form-warna">
+                <?php if (!empty($error)): ?>
+                    <div style="color:red"><?= htmlspecialchars($error) ?></div>
+                <?php endif; ?>
+                <form method="POST" class="form-warna">
                     <label>Minat Bakat:
                         <select name="id_minat_bakat" required>
+                            <option value="">-- Pilih Minat Bakat --</option>
                             <?php
-                            $minat_result = $mysqli->query("SELECT id_minat_bakat, nama_minat_bakat FROM minat_bakat");
+                            $minat_result->data_seek(0);
                             while ($mb = $minat_result->fetch_assoc()):
-                                echo '<option value="'.$mb['id_minat_bakat'].'">'.htmlspecialchars($mb['nama_minat_bakat']).'</option>';
-                            endwhile;
                             ?>
+                                <option value="<?= $mb['id_minat_bakat'] ?>" <?= (isset($_POST['id_minat_bakat']) && $_POST['id_minat_bakat'] == $mb['id_minat_bakat']) ? 'selected' : '' ?>>
+                                    <?= htmlspecialchars($mb['nama_minat_bakat']) ?>
+                                </option>
+                            <?php endwhile; ?>
                         </select>
                     </label>
                     <label>Tanggal:
-                        <input type="date" name="tanggal" required>
+                        <input type="date" name="tanggal" value="<?= htmlspecialchars($_POST['tanggal'] ?? '') ?>" required>
                     </label>
                     <label>Jam:
-                        <input type="time" name="jam" required>
+                        <input type="time" name="jam" value="<?= htmlspecialchars($_POST['jam'] ?? '') ?>" required>
                     </label>
                     <label>Keterangan:
-                        <input type="text" name="keterangan">
+                        <input type="text" name="keterangan" value="<?= htmlspecialchars($_POST['keterangan'] ?? '') ?>">
                     </label>
-                    <input type="submit" value="Simpan Jadwal" class="button">
+                    <button type="submit" class="button">Simpan Jadwal</button>
                 </form>
             </div>
         </div>
