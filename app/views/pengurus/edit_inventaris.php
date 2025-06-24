@@ -14,7 +14,7 @@
             <?php if ($error): ?>
                 <div style="color:red;"><?= htmlspecialchars($error) ?></div>
             <?php endif; ?>
-            <form method="post">
+            <form method="post" class="form-warna">
                 <div class="form-row">
                     <label for="nama_item">Nama Item:</label>
                     <input type="text" name="nama_item" id="nama_item" value="<?= htmlspecialchars($nama_item) ?>" required>

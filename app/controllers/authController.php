@@ -6,7 +6,7 @@ session_start();
 if (isset($_GET["logout"])) {
     session_unset();
     session_destroy();
-    header("Location: ../views/beranda.php");
+    header("Location: ../controllers/beranda.php");
     exit();
 }
 
