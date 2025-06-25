@@ -2,7 +2,7 @@
 <div class="content">
     <?php if ($is_pengurus): ?>
         <div style="text-align:center; margin-bottom:24px;">
-            <a href="beranda_pengurus.php" class="button">&larr; Kembali ke Halaman Pengurus</a>
+            <a href="/SI-BIRAMA/app/controllers/pengurus/beranda_pengurus.php" class="button">&larr; Kembali ke Halaman Pengurus</a>
         </div>
     <?php endif; ?>
 

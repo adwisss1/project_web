@@ -15,5 +15,4 @@ if (!$result) {
     $error = "Gagal mengambil data pendaftar: " . $mysqli->error;
 }
 
-// Kirim ke view
 include __DIR__ . '/../../views/pengurus/rekap_pendaftar.php';

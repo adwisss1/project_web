@@ -16,7 +16,7 @@
         </header>
 
         <h2>Selamat datang, <?= htmlspecialchars($_SESSION["user"]["username"]); ?>!</h2>
-        <a href="beranda.php" class="button" style="margin-bottom:18px; display:inline-block;">&larr; Kembali ke Halaman Beranda</a>
+        <a href="/SI-BIRAMA/app/controllers/beranda.php" class="button" style="margin-bottom:18px; display:inline-block;">&larr; Kembali ke Halaman Beranda</a>
 
         <h3>Daftar Pengurus</h3>
         <table class="custom-table">
