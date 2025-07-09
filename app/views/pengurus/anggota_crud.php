@@ -1,4 +1,3 @@
-<!-- filepath: d:\dari c\2Xampp\instal\htdocs\SI-BIRAMA\app\views\pengurus\anggota_crud.php -->
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -15,14 +14,14 @@
         <h2><?= $mode === 'add' ? 'Tambah Anggota' : ($mode === 'edit' ? 'Edit Anggota' : 'Hapus Anggota') ?></h2>
 
         <?php if ($error): ?>
-          <div style="color:red"><?= htmlspecialchars($error) ?></div>
+          <div style="color:red; margin-bottom:10px;"><?= htmlspecialchars($error) ?></div>
         <?php endif; ?>
 
         <?php if ($mode === 'add' || $mode === 'edit'): ?>
-        <form method="post">
+        <form method="post" class="form-warna">
           <?php if ($mode === 'add'): ?>
             <label>Username:
-              <input type="text" name="username" required>
+              <input type="text" name="username" value="<?= htmlspecialchars($_POST['username'] ?? '') ?>" required>
             </label><br>
             <label>Password:
               <input type="password" name="password" required>
@@ -32,12 +31,15 @@
           <label>Nama:
             <input type="text" name="nama" value="<?= htmlspecialchars($nama) ?>" required>
           </label><br>
+
           <label>NRA:
             <input type="text" name="nra" value="<?= htmlspecialchars($nra) ?>" required>
           </label><br>
+
           <label>Angkatan:
             <input type="text" name="angkatan" value="<?= htmlspecialchars($angkatan) ?>" required>
           </label><br>
+
           <label>Minat Bakat:
             <select name="id_minat_bakat" required>
               <option value="">-- Pilih --</option>
@@ -58,6 +60,17 @@
       </div>
     </div>
   </div>
+
   <?php include __DIR__ . '/../footer.php'; ?>
+
+  <script>
+    document.querySelector("form")?.addEventListener("submit", function () {
+      const btn = this.querySelector("button[type='submit']");
+      if (btn) {
+        btn.disabled = true;
+        btn.innerText = "Mengirim...";
+      }
+    });
+  </script>
 </body>
 </html>

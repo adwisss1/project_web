@@ -41,19 +41,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 <body>
     <div class="main-content">
-        <div class="container" style="max-width:600px; margin-top:100px;">
+        <div class="container"  style="max-width:600px; margin-top:100px;">
             <div class="alert alert-info text-justify mb-4" role="alert">
                 Username dan password ada di informasi pasca penerimaan yang diberikan oleh pengurus UKM Seni dan Budaya. Jika belum mendaftar silahkan lakukan pendaftaran dan ikuti skema penerimaan sesuai dengan jadwal dan ketentuan.
             </div>
-        <form method="POST" style="margin-bottom: 100px;">
+        <form method="POST" class=" form-warna" style="margin-bottom: 100px;">
             <h2>Login</h2>
             <label for="username">Username:</label>
             <input type="text" name="username" required>
             
-            <label for="password">Password:</label>
-            <input type="password" name="password" required>
+            <label for="password">Password: </label>
+            <input type="password"  name="password" required>
             
-            <button type="submit">Login</button>
+            <button type="submit" class="button">Login</button>
         </form>
 
         </div>

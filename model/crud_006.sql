@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Waktu pembuatan: 24 Jun 2025 pada 18.12
+-- Waktu pembuatan: 09 Jul 2025 pada 01.04
 -- Versi server: 10.4.32-MariaDB
 -- Versi PHP: 8.2.12
 
@@ -52,7 +52,9 @@ INSERT INTO `absensi` (`id`, `user_id`, `id_sesi_absensi`, `tanggal`, `status_ke
 (12, 2, 43, '2025-06-23', 'Hadir', 'Hadir'),
 (13, 2, 45, '2025-06-24', 'Hadir', 'Hadir'),
 (14, 2, 46, '2025-06-22', 'Izin', 'Hadir'),
-(15, 354, 47, '2025-06-24', 'Hadir', 'Hadir');
+(15, 354, 47, '2025-06-24', 'Hadir', 'Hadir'),
+(16, 354, 50, '2025-07-01', 'Izin', 'Hadir'),
+(17, 354, 51, '2025-06-30', 'Hadir', 'Hadir');
 
 -- --------------------------------------------------------
 
@@ -820,10 +822,11 @@ INSERT INTO `evaluasi` (`id`, `user_id`, `umpan_balik`, `created_at`, `updated_a
 (11, 628, 'hj,acsbCH SCJNSV', '2025-06-07 04:07:14', '2025-06-21 03:07:04'),
 (12, 630, 'znv djowa\'M', '2025-06-08 05:42:23', NULL),
 (13, 632, 'aFWKChn akw\"qwi', '2025-06-10 02:54:14', NULL),
-(14, 634, 'fghjkl;fjfN WJCFIwendsmvkdvsplsvdkmSKMPMKDspvSDVokbfsmk cokgjiguierhuueghf9ru9hogid bnfn keeiewnvjn n v ejwighgj', '2025-06-21 00:49:23', NULL),
+(14, 634, 'nayla ga pernah latihan', '2025-06-21 00:49:23', '2025-06-30 03:50:19'),
 (16, 629, 'nkasnfks', '2025-06-21 03:07:16', NULL),
 (17, 631, 'tingkatkan lagi performa dalam tampil', '2025-06-21 03:13:25', '2025-06-21 13:22:41'),
-(18, 636, 'njsndfk', '2025-06-23 01:25:04', NULL);
+(18, 636, 'njsndfk', '2025-06-23 01:25:04', NULL),
+(19, 637, 'uuuuuuuuuuu cupuuuuuuuuu', '2025-06-30 03:50:36', NULL);
 
 -- --------------------------------------------------------
 
@@ -1012,14 +1015,6 @@ CREATE TABLE `pengumuman` (
   `isi` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Dumping data untuk tabel `pengumuman`
---
-
-INSERT INTO `pengumuman` (`id`, `isi`) VALUES
-(2, 'PERHATIAN: anggota minat bakat band untuk menghadiri seleksi band senbud dalam rangka perilisan album baru ukmu seni dan budaya'),
-(7, 'mas fvakendm bnv');
-
 -- --------------------------------------------------------
 
 --
@@ -1122,7 +1117,6 @@ CREATE TABLE `program_kerja` (
 INSERT INTO `program_kerja` (`id`, `nama_program`, `tanggal_mulai`, `tanggal_selesai`, `deskripsi`, `pj_pengurus`, `ketua_panitia`, `status`, `tanggal_selesai_agenda`) VALUES
 (1, 'Pelatihan Dasar Anggota', '2024-07-01', '2024-07-05', 'Pelatihan dasar untuk anggota baru.', 1, 720, 'Perencanaan', '0000-00-00'),
 (2, 'Festival Seni', '2024-08-10', '2024-08-12', 'Festival seni tahunan.', 2, 727, 'Perencanaan', '0000-00-00'),
-(4, 'Workshop Musik', '2024-10-15', '2024-10-16', 'Workshop musik bersama mentor nasional.', 4, NULL, 'Perencanaan', NULL),
 (5, 'Lomba Tari', '2024-11-20', '2024-11-21', 'Lomba tari antar sekolah.', 5, NULL, 'Perencanaan', NULL),
 (6, 'bersih bersih sekret', '2025-02-02', '2025-12-12', 'berish bersih dah', 4, 640, 'berjalan', '2025-12-31');
 
@@ -1149,7 +1143,7 @@ INSERT INTO `progress_proker` (`id`, `id_program`, `laporan`, `tanggal_update`) 
 (3, 2, 'kknca;sh AJSIJfaJS DO', '2025-06-02 22:13:47'),
 (4, 2, 'asncAJSN JADJAMDakndia ', '2025-06-02 22:15:11'),
 (5, 1, 'AAU\r\n', '2025-06-23 10:31:58'),
-(6, 1, 'yuio', '2025-06-23 10:36:27');
+(6, 1, 'yuiojj', '2025-06-30 10:50:27');
 
 -- --------------------------------------------------------
 
@@ -1174,7 +1168,11 @@ INSERT INTO `sesi_absensi` (`id`, `id_jadwal`, `nama_sesi`, `tanggal`, `status`)
 (34, 9, 'Absensi Rutin', '2025-06-13', 'ditutup'),
 (44, 4, 'Absensi Kondisional', '2025-06-24', 'ditutup'),
 (45, 9, 'Absensi Rutin', '2025-06-24', 'ditutup'),
-(46, 9, 'Absensi Rutin', '2025-06-22', 'ditutup');
+(46, 9, 'Absensi Rutin', '2025-06-22', 'ditutup'),
+(48, 9, 'Absensi Rutin', '2025-06-26', 'dibuka'),
+(49, 8, 'Absensi Rutin', '2025-07-01', 'ditutup'),
+(50, 8, 'Absensi Rutin', '2025-07-01', 'ditutup'),
+(51, 8, 'Absensi Rutin', '2025-06-30', 'dibuka');
 
 -- --------------------------------------------------------
 
@@ -1214,7 +1212,8 @@ INSERT INTO `talent` (`id_talent`, `jenis_talent`, `keterangan`) VALUES
 (2, 'modern dance', 'penari hip hop dengan musik modern dan beat cepat'),
 (3, 'band birama satu', 'band birama dengan susunan: gitar, bass, keyboard, vocal, drum'),
 (4, 'vocal solo', 'penyanyi laki-laki atau perempuan yang siap di minta nyanyi lagu apapun'),
-(5, 'paket 10 penari gandrung', 'tarian gandrung dibawakan oleh 10 orang penari');
+(5, 'paket 10 penari gandrung', 'tarian gandrung dibawakan oleh 10 orang penari'),
+(7, 'band birama satu', 'yyyy');
 
 -- --------------------------------------------------------
 
@@ -1889,7 +1888,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT untuk tabel `absensi`
 --
 ALTER TABLE `absensi`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
 -- AUTO_INCREMENT untuk tabel `anggota`
@@ -1919,7 +1918,7 @@ ALTER TABLE `book_talent`
 -- AUTO_INCREMENT untuk tabel `evaluasi`
 --
 ALTER TABLE `evaluasi`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
 
 --
 -- AUTO_INCREMENT untuk tabel `inventaris`
@@ -2003,7 +2002,7 @@ ALTER TABLE `progress_proker`
 -- AUTO_INCREMENT untuk tabel `sesi_absensi`
 --
 ALTER TABLE `sesi_absensi`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=48;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=52;
 
 --
 -- AUTO_INCREMENT untuk tabel `sewa_barang`
@@ -2015,7 +2014,7 @@ ALTER TABLE `sewa_barang`
 -- AUTO_INCREMENT untuk tabel `talent`
 --
 ALTER TABLE `talent`
-  MODIFY `id_talent` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id_talent` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT untuk tabel `users`

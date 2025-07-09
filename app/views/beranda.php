@@ -28,14 +28,14 @@
                 <tr>
                     <td><?= htmlspecialchars($row['isi']) ?></td>
                     <td>
-                        <a href="edit_pengumuman.php?id=<?= $row['id'] ?>" class="button">Edit</a>
-                        <a href="hapus_pengumuman.php?id=<?= $row['id'] ?>" class="button" onclick="return confirm('Hapus pengumuman ini?')">Hapus</a>
+                        <a href="/SI-BIRAMA/app/controllers/pengumuman.php?aksi=edit&id=<?= $row['id'] ?>" class="button">Edit</a>
+                        <a href="/SI-BIRAMA/app/controllers/pengumuman.php?aksi=hapus&id=<?= $row['id'] ?>" class="button" onclick="return confirm('Hapus pengumuman ini?')">Hapus</a>
                     </td>
                 </tr>
                 <?php endwhile; ?>
                 <tr>
                     <td colspan="2" style="text-align:center;">
-                        <a href="tambah_pengumuman.php" class="button">Tambah Pengumuman</a>
+                        <a href="/SI-BIRAMA/app/controllers/pengumuman.php?aksi=tambah" class="button">Tambah Pengumuman</a>
                     </td>
                 </tr>
             </table>
